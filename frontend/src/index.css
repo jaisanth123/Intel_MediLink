@@ -13,3 +13,46 @@
     @apply bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300;
   }
 } */
+form-input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-gradient-to-r from-teal-500 to-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:from-teal-600 hover:to-blue-700 transition-all duration-200;
+}
+
+/* Pulsing animation for hospital icons */
+@keyframes pulse-gentle {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse-icon {
+  animation: pulse-gentle 3s infinite ease-in-out;
+}
+
+/* Background animation */
+.animated-bg {
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
