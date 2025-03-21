@@ -43,26 +43,6 @@ const Dashboard = () => {
       link: "/insights",
       linkText: "View Insights",
     },
-    {
-      id: 3,
-      title: "Virtual Consultation",
-      description:
-        "Connect with medical professionals for virtual consultations and get expert advice from the comfort of your home.",
-      icon: "Video",
-      color: "purple",
-      link: "/consultation",
-      linkText: "Book Consultation",
-    },
-    {
-      id: 4,
-      title: "Medication Tracker",
-      description:
-        "Never miss a dose with reminders and track your medication history for better health management.",
-      icon: "Pill",
-      color: "green",
-      link: "/medications",
-      linkText: "Track Medications",
-    },
   ];
 
   return (
