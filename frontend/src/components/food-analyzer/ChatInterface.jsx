@@ -240,7 +240,7 @@ const ChatInterface = () => {
         <MessageList messages={messages} />
 
         {/* Show prominent uploader when no user interaction yet */}
-        {!hasInteracted && (
+        {!hasInteracted && !selectedImage && (
           <div
             className=" flex flex-col  items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50  cursor-pointer"
             onClick={() => document.getElementById("fileInput").click()}
