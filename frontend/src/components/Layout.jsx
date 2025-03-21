@@ -15,6 +15,9 @@ import {
   User,
 } from "lucide-react";
 
+import { SiWorldhealthorganization } from "react-icons/si";
+import { IoFastFoodOutline } from "react-icons/io5";
+
 const Layout = ({ onLogout }) => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -49,11 +52,16 @@ const Layout = ({ onLogout }) => {
     { title: "Dashboard", icon: <Home size={20} />, path: "/dashboard" },
     {
       title: "Food Analyzer",
-      icon: <Heart size={20} />,
+      icon: <IoFastFoodOutline size={20} />,
       path: "/food-analyzer",
     },
+    {
+      title: "Health Insights",
+      icon: <SiWorldhealthorganization size={20} />,
+      path: "/health-insights",
+    },
     { title: "Profile", icon: <User size={20} />, path: "/profile" },
-    { title: "Settings", icon: <Settings size={20} />, path: "/settings" },
+    // { title: "Settings", icon: <Settings size={20} />, path: "/settings" },
   ];
 
   return (
