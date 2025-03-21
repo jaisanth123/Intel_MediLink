@@ -12,6 +12,7 @@ import {
   AlertCircle,
   User,
 } from "lucide-react";
+import axios from "axios";
 
 const FoodAnalyzer = () => {
   const [step, setStep] = useState(1);
@@ -19,6 +20,7 @@ const FoodAnalyzer = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [ocrResult, setOcrResult] = useState("");
   const fileInputRef = useRef(null);
 
   const [healthInfo, setHealthInfo] = useState({
@@ -85,42 +87,44 @@ const FoodAnalyzer = () => {
     setPreviewUrl(null);
   };
 
-  const handleAnalyzeFood = () => {
-    setAnalyzing(true);
-    // Simulate API call to analyze food
-    setTimeout(() => {
-      // Mock result
-      setAnalysisResult({
-        suitability: "suitable", // suitable, caution, not_suitable
-        foodName: "Mixed Berry Salad",
-        ingredients: [
-          "Strawberries",
-          "Blueberries",
-          "Blackberries",
-          "Honey",
-          "Mint",
-        ],
-        nutritionalInfo: {
-          calories: 120,
-          protein: 1.5,
-          carbs: 30,
-          fat: 0.5,
-          fiber: 4,
-        },
-        healthSuggestions:
-          "This food is low in calories and rich in antioxidants, making it a healthy choice for your condition.",
-        warnings: [],
-        benefits: [
-          "Rich in antioxidants",
-          "Good source of vitamin C",
-          "Low glycemic index",
-        ],
-      });
-      setAnalyzing(false);
-      setStep(4);
-    }, 2000);
-  };
+  const handleAnalyzeFood = async () => {
+    const formData = new FormData();
+    formData.append("image", selectedImage);
 
+    setAnalyzing(true);
+
+    try {
+      console.log("Sending image for analysis:", selectedImage);
+      const response = await axios.post(
+        "http://localhost:5000/api/food-analyze",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Response from server:", response.data);
+
+      if (response.data.success) {
+        setOcrResult(response.data.result.text || "No text detected");
+      } else {
+        setOcrResult(`Error: ${response.data.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error during OCR:", error);
+      console.error(
+        "Error details:",
+        error.response?.data || "No response data"
+      );
+      setOcrResult(
+        `Error during OCR: ${error.response?.data?.message || error.message}`
+      );
+    } finally {
+      setAnalyzing(false);
+    }
+  };
   const resetAnalysis = () => {
     setSelectedImage(null);
     setPreviewUrl(null);
@@ -582,6 +586,13 @@ const FoodAnalyzer = () => {
           </div>
         )}
       </motion.div>
+
+      {ocrResult && (
+        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">OCR Result</h2>
+          <p>{ocrResult}</p>
+        </div>
+      )}
     </div>
   );
 };
