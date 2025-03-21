@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Send, PaperclipIcon } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Send, PaperclipIcon, Image } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import UserInfoForm from "./UserInfoForm";
 import MessageList from "./MessageList";
@@ -21,13 +21,24 @@ const ChatInterface = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const messageEndRef = useRef(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    // Set hasInteracted to true if there are more than the initial system message
+    if (messages.length > 1) {
+      setHasInteracted(true);
+    }
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim() && !selectedImage) return;
+
+    // User has now interacted with the chat
+    setHasInteracted(true);
 
     // Add user message to chat
     const newUserMessage = {
@@ -212,7 +223,10 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+    <div
+      className="flex flex-col h-screen w-full bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200"
+      style={{ height: "calc(100vh - 64px)" }}
+    >
       {/* Chat Header */}
       <div className="bg-teal-600 text-white p-4">
         <h1 className="text-xl font-semibold">Food Analysis Assistant</h1>
@@ -222,8 +236,31 @@ const ChatInterface = () => {
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+      <div className="flex-1 overflow-y-auto  p-4 bg-gray-50">
         <MessageList messages={messages} />
+
+        {/* Show prominent uploader when no user interaction yet */}
+        {!hasInteracted && (
+          <div
+            className=" flex flex-col  items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50  cursor-pointer"
+            onClick={() => document.getElementById("fileInput").click()}
+            style={{ margin: " auto" }}
+          >
+            <Image size={48} className="text-teal-500 mb-4" />
+            <h3 className="text-xl  font-medium text-teal-700 mb-2 text-center">
+              Upload a Food Image
+            </h3>
+            <p className="text-center text-teal-600 mb-4">
+              Upload an image of your meal to get personalized nutritional
+              insights based on your profile
+            </p>
+            <ImageUploader
+              onImageSelected={handleImageUpload}
+              className="hidden" // Hide the default button
+            />
+          </div>
+        )}
+
         {isTyping && (
           <div className="flex items-center space-x-2 text-gray-500 mt-2">
             <div className="typing-indicator">
