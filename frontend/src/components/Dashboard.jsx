@@ -10,6 +10,17 @@ import FeatureCard from "./dashboard/FeatureCard";
 import HealthTips from "./dashboard/HealthTips";
 
 const Dashboard = () => {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      const user = JSON.parse(userString);
+      setUserName(user.name || "Guest");
+    }
+  }, []);
+
   // Features data
   const features = [
     {
@@ -57,7 +68,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <WelcomeBanner username="John" />
+      <WelcomeBanner username={userName} />
 
       {/* News Carousel */}
       <NewsCarousel />

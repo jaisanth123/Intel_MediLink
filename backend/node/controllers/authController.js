@@ -1,5 +1,3 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const User = require("../models/UserAuth");
 
 // Register a new user
@@ -7,28 +5,35 @@ const registerUser = async (req, res) => {
   const { name, email, password, address, gender } = req.body;
 
   try {
-    // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create new user
-    const newUser = new User({
+    const user = new User({
       name,
       email,
-      password: hashedPassword, // Store hashed password
+      password,
       address,
-      gender,
+      gender
     });
 
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully", newUser });
+    await user.save();
+
+    const token = user.generateToken();
+
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -38,27 +43,31 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Email not registered" });
     }
 
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" } // Token expires in 1 hour
-    );
-    res.json({ message: "Login successful", token, user });
+    const token = user.generateToken();
+
+    res.json({
+      success: true,
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Login error:', error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -72,4 +81,39 @@ const getUsers = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUsers };
+const updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { name, email, address, gender } = req.body;
+
+    // Update user fields
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.address = address || user.address;
+    user.gender = gender || user.gender;
+
+    await user.save();
+
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      address: user.address,
+      gender: user.gender
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating profile" });
+  }
+};
+
+
+module.exports = { 
+  registerUser, 
+  loginUser, 
+  getUsers, 
+  updateProfile 
+};

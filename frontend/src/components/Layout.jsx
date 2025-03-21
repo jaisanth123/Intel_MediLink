@@ -1,6 +1,6 @@
 // File: src/components/Layout.jsx
 import { useState, useEffect } from "react";
-import { Outlet, useLocation, Link } from "react-router-dom";
+import { Outlet, useLocation, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Menu,
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 const Layout = ({ onLogout }) => {
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
@@ -35,6 +36,14 @@ const Layout = ({ onLogout }) => {
 
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  const handleLogout = () => {
+    onLogout();
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
 
   const sidebarItems = [
     { title: "Dashboard", icon: <Home size={20} />, path: "/dashboard" },
@@ -126,25 +135,28 @@ const Layout = ({ onLogout }) => {
             </nav>
           </div>
 
-          <div className="border-t p-4">
-            <button
-              onClick={onLogout}
-              className="flex items-center w-full px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
-            >
-              <LogOut size={20} />
-              {isSidebarOpen && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="ml-3"
-                >
-                  Logout
-                </motion.span>
-              )}
-            </button>
-          </div>
-        </div>
+
+      <div className="border-t p-4">
+      <button
+        onClick={handleLogout}
+        className={`flex items-center ${
+          isSidebarOpen ? "w-full px-4" : "justify-center w-full"
+        } py-2 text-gray-600 hover:bg-gray-100 rounded-md`}
+      >
+        <LogOut size={20} />
+        {isSidebarOpen && (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="ml-3"
+          >
+            Logout
+          </motion.span>
+        )}
+      </button>
+    </div>
+            </div>
       </motion.div>
 
       {/* Main Content */}
@@ -171,9 +183,12 @@ const Layout = ({ onLogout }) => {
               <Bell size={20} />
               <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </button>
-            <div className="h-8 w-8 bg-teal-100 rounded-full flex items-center justify-center">
+            <button 
+              onClick={handleProfileClick}
+              className="h-8 w-8 bg-teal-100 rounded-full flex items-center justify-center hover:bg-teal-200 transition-colors"
+            >
               <User size={16} className="text-teal-600" />
-            </div>
+            </button>
           </div>
         </header>
 

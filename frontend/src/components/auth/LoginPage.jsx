@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -36,22 +36,30 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
-        {
-          email: formData.email,
-          password: formData.password,
-        }
+        formData
       );
 
-      // Store token in localStorage
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      const { success, token, user } = response.data;
+      
+      if (success) {
+        // Store auth data
+        const expirationTime = new Date().getTime() + 60 * 60 * 1000; // 1 hour
+        localStorage.setItem("token", token);
+        localStorage.setItem("tokenExpiration", expirationTime);
+        localStorage.setItem("user", JSON.stringify(user));
 
-      // Redirect to dashboard
-      navigate("/dashboard");
+        // Update auth state
+        onLogin();
+        
+        // Navigate to dashboard immediately
+        navigate("/dashboard", { replace: true });
+      } else {
+        setError("Login failed. Please try again.");
+      }
     } catch (error) {
       setError(
         error.response?.data?.message ||
-          "Login failed. Please check your credentials."
+        "Login failed. Please check your credentials."
       );
     } finally {
       setIsLoading(false);
