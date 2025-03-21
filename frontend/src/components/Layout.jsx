@@ -42,7 +42,7 @@ const Layout = ({ onLogout }) => {
   };
 
   const handleProfileClick = () => {
-    navigate('/profile');
+    navigate("/profile");
   };
 
   const sidebarItems = [
@@ -51,11 +51,6 @@ const Layout = ({ onLogout }) => {
       title: "Food Analyzer",
       icon: <Heart size={20} />,
       path: "/food-analyzer",
-    },
-    {
-      title: "Appointments",
-      icon: <Calendar size={20} />,
-      path: "/appointments",
     },
     { title: "Profile", icon: <User size={20} />, path: "/profile" },
     { title: "Settings", icon: <Settings size={20} />, path: "/settings" },
@@ -135,28 +130,27 @@ const Layout = ({ onLogout }) => {
             </nav>
           </div>
 
-
-      <div className="border-t p-4">
-      <button
-        onClick={handleLogout}
-        className={`flex items-center ${
-          isSidebarOpen ? "w-full px-4" : "justify-center w-full"
-        } py-2 text-gray-600 hover:bg-gray-100 rounded-md`}
-      >
-        <LogOut size={20} />
-        {isSidebarOpen && (
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="ml-3"
-          >
-            Logout
-          </motion.span>
-        )}
-      </button>
-    </div>
-            </div>
+          <div className="border-t p-4">
+            <button
+              onClick={handleLogout}
+              className={`flex items-center ${
+                isSidebarOpen ? "w-full px-4" : "justify-center w-full"
+              } py-2 text-gray-600 hover:bg-gray-100 rounded-md`}
+            >
+              <LogOut size={20} />
+              {isSidebarOpen && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="ml-3"
+                >
+                  Logout
+                </motion.span>
+              )}
+            </button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Main Content */}
@@ -183,7 +177,7 @@ const Layout = ({ onLogout }) => {
               <Bell size={20} />
               <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </button>
-            <button 
+            <button
               onClick={handleProfileClick}
               className="h-8 w-8 bg-teal-100 rounded-full flex items-center justify-center hover:bg-teal-200 transition-colors"
             >
