@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import pytesseract
@@ -44,9 +44,16 @@ async def llm_chat(request: ChatRequest):
         )
 
 @app.post("/ocr")
-async def ocr(file: UploadFile = File(...)):
+async def ocr(
+    file: UploadFile = File(...),
+    age: str = Form(...),
+    gender: str = Form(...),
+    description: str = Form("")
+):
     try:
         logger.info(f"Received file: {file.filename}, content_type: {file.content_type}")
+        logger.info(f"User info - Age: {age}, Gender: {gender}")
+        logger.info(f"Description: {description}")
         
         # Save the uploaded file temporarily
         file_location = f"uploads/{file.filename}"
@@ -83,7 +90,10 @@ async def ocr(file: UploadFile = File(...)):
             logger.info(f"OCR Result: {text[:100]}...")  # Log first 100 chars
         except Exception as ocr_error:
             logger.error(f"OCR Error: {str(ocr_error)}")
-            return JSONResponse(content={"success": False, "message": f"OCR Error: {str(ocr_error)}"})
+            return JSONResponse(content={
+                "success": False, 
+                "message": f"OCR Error: {str(ocr_error)}"
+            })
         
         # Remove the file after processing
         try:
@@ -92,11 +102,17 @@ async def ocr(file: UploadFile = File(...)):
         except Exception as rm_error:
             logger.warning(f"Error removing file: {str(rm_error)}")
         
-        return JSONResponse(content={"success": True, "text": text})
+        # Return structured response with user info and OCR result
+        return JSONResponse(content={
+            "success": True,
+            "gender": gender,
+            "age": age,
+            "description": description,
+            "text": text
+        })
     except Exception as e:
         logger.error(f"General Error: {str(e)}")
         return JSONResponse(content={"success": False, "message": str(e)})
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

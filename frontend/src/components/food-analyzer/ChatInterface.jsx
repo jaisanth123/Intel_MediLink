@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, PaperclipIcon, Image } from "lucide-react";
+import { Send, Image } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import UserInfoForm from "./UserInfoForm";
 import MessageList from "./MessageList";
@@ -22,6 +22,9 @@ const ChatInterface = () => {
   const [showUploadForm, setShowUploadForm] = useState(false);
   const messageEndRef = useRef(null);
   const [hasInteracted, setHasInteracted] = useState(false);
+
+  // Update backend URL to point directly to Python FastAPI
+  const BACKEND_URL = "http://localhost:8000";
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -54,8 +57,8 @@ const ChatInterface = () => {
 
     try {
       if (selectedImage) {
-        // If image is selected, call food-analyze endpoint
-        await handleFoodAnalysis();
+        // If image is selected, call OCR endpoint
+        await handleImageOCR();
       } else {
         // Regular chat message
         await handleChatMessage(inputMessage);
@@ -79,7 +82,8 @@ const ChatInterface = () => {
 
   const handleChatMessage = async (message) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/chat", {
+      // Directly use the FastAPI llm-chat endpoint
+      const response = await axios.post(`${BACKEND_URL}/llm-chat`, {
         message: message,
       });
 
@@ -98,7 +102,7 @@ const ChatInterface = () => {
     }
   };
 
-  const handleFoodAnalysis = async () => {
+  const handleImageOCR = async () => {
     // Only proceed if we have image and required user info
     if (!selectedImage || !userInfo.age || !userInfo.gender) {
       setMessages((prev) => [
@@ -113,10 +117,10 @@ const ChatInterface = () => {
     }
 
     const formData = new FormData();
-    formData.append("image", selectedImage);
+    formData.append("file", selectedImage); // Change 'image' to 'file' to match FastAPI parameter
     formData.append("age", userInfo.age);
     formData.append("gender", userInfo.gender);
-    formData.append("message", inputMessage); // Additional context from the user
+    formData.append("description", inputMessage); // Use description parameter from FastAPI
 
     try {
       setIsUploading(true);
@@ -131,26 +135,23 @@ const ChatInterface = () => {
         },
       ]);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/food-analyze",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // Directly use the FastAPI OCR endpoint
+      const response = await axios.post(`${BACKEND_URL}/ocr`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       // Remove the processing message
       setMessages((prev) => prev.filter((msg) => !msg.isProcessing));
 
       if (response.data.success) {
-        // Format and display the food analysis result
+        // Format and display the OCR result
         setMessages((prev) => [
           ...prev,
           {
             type: "system",
-            content: formatAnalysisResult(response.data.result),
+            content: formatAnalysisResult(response.data),
             isAnalysisResult: true,
           },
         ]);
@@ -167,7 +168,7 @@ const ChatInterface = () => {
         ]);
       }
     } catch (error) {
-      console.error("Error during food analysis:", error);
+      console.error("Error during image OCR:", error);
       setMessages((prev) => [
         ...prev,
         {
@@ -183,9 +184,23 @@ const ChatInterface = () => {
   };
 
   const formatAnalysisResult = (result) => {
-    // Placeholder for formatting analysis results
-    // In a real implementation, you would format the result nicely based on the response structure
-    return `Analysis complete! ${result.text || "No text detected in image."}`;
+    // Format the OCR results including user info and detected text
+    if (!result || !result.success) {
+      return "Could not analyze the image.";
+    }
+
+    return `
+    Analysis complete!
+    
+    User Profile:
+    • Age: ${result.age}
+    • Gender: ${result.gender}
+    
+    ${result.description ? `Description: ${result.description}\n\n` : ""}
+    
+    Text detected in image:
+    ${result.text ? result.text.trim() : "No text detected in image."}
+    `;
   };
 
   const resetImageUpload = () => {
@@ -242,22 +257,17 @@ const ChatInterface = () => {
         {/* Show prominent uploader when no user interaction yet */}
         {!hasInteracted && !selectedImage && (
           <div
-            className=" flex flex-col  items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50  cursor-pointer"
-            onClick={() => document.getElementById("fileInput").click()}
-            style={{ margin: " auto" }}
+            className="flex flex-col items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50"
+            style={{ margin: "auto" }}
           >
             <Image size={48} className="text-teal-500 mb-4" />
-            <h3 className="text-xl  font-medium text-teal-700 mb-2 text-center">
+            <h3 className="text-xl font-medium text-teal-700 mb-2 text-center">
               Upload a Food Image
             </h3>
             <p className="text-center text-teal-600 mb-4">
-              Upload an image of your meal to get personalized nutritional
-              insights based on your profile
+              Upload an image of your meal to get text analysis
             </p>
-            <ImageUploader
-              onImageSelected={handleImageUpload}
-              className="hidden" // Hide the default button
-            />
+            <ImageUploader onImageSelected={handleImageUpload} />
           </div>
         )}
 
