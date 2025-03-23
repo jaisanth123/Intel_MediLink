@@ -46,7 +46,7 @@ except Exception as e:
 
 # Define a chat history class to manage conversation history
 class ChatHistory:
-    def __init__(self, window_size=10):
+    def __init__(self, window_size=5):  # Changed to 5 as requested
         self.messages: List[Tuple[str, str]] = []
         self.window_size = window_size
     
@@ -75,24 +75,17 @@ class ChatHistory:
 # Function to generate response using model
 def get_llm_response(message: str, chat_history: ChatHistory):
     try:
+        # Add the current message to history
+        chat_history.add_message(message)
+        
         # Get conversation history (excluding the current message)
         history_text = chat_history.get_chat_history_text()
         
-        # Detect if this is a nutrition analysis prompt from OCR
-        is_nutrition_prompt = "You are a nutrition expert" in message
-        
-        # Create the appropriate system prompt based on the message type
-#         if is_nutrition_prompt:
-#             system_prompt = """You are a nutrition expert AI assistant. Analyze the provided information carefully and give detailed, helpful nutritional advice. Include:
-# 1. A summary of the detected nutritional content
-# 2. Health implications based on the user's age and gender
-# 3. Specific recommendations for improvement
-# 4. Any potential concerns that should be addressed"""
-#         else:
-#             system_prompt = "You are a helpful, friendly AI assistant. Provide clear, concise, and accurate responses to user questions."
+        # Create a system prompt
+        system_prompt = "You are a helpful, friendly AI assistant. Provide clear, concise, and accurate responses to user questions."
         
         # Construct the prompt in Qwen's expected chat format
-        full_prompt = f"<|im_end|>\n{history_text}<|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n"
+        full_prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n{history_text}<|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n"
         
         # Log the prompt for debugging
         logger.info(f"Prompt sent to LLM: {full_prompt}")
@@ -116,3 +109,18 @@ def get_llm_response(message: str, chat_history: ChatHistory):
         error_message = f"I'm sorry, I encountered an error: {str(e)}"
         chat_history.update_last_response(error_message)
         return error_message
+
+# Example usage
+if __name__ == "__main__":
+    # Initialize chat history with 5-message window
+    history = ChatHistory(window_size=5)
+    
+    # Example conversation loop
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["exit", "quit", "bye"]:
+            print("Chatbot: Goodbye!")
+            break
+        
+        response = get_llm_response(user_input, history)
+        print(f"Chatbot: {response}")

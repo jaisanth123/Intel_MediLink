@@ -195,7 +195,7 @@ const Layout = ({ onLogout }) => {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 overflow-auto px-2">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
