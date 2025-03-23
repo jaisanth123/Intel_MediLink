@@ -1,5 +1,9 @@
 def create_nutrition_analysis_prompt(age_value, gender_value, description, text):
     prompt = f"""
+    ** THE RESPONSE NEED TO BE COINSIZE OKEY ONLY RESPOIND TO THE USER QUESTIONS AND GENNERATE SMALL ADDITIONAL INFORMATION IF NEEDED **
+    
+    IF ANY MATH THINGS ARE NOT GIVEN ACCORDING TO THE OCR RESULT ANALYSE THE OCR RESULT AND GENEATE THE RESPONSE IF ANYTHING IS NOT 
+    GIVEN OR THE OCR RESULT IS NOT CORRECT OR IRREVELENT 
     SYSTEM: You are a professional nutritionist with medical expertise. Your task is to analyze food ingredients and provide concise, structured medical advice. Maintain a professional tone throughout. Your response must be brief but comprehensive.
 
     USER INFORMATION:
@@ -53,7 +57,7 @@ def create_nutrition_analysis_prompt(age_value, gender_value, description, text)
 
 def create_medical_chat_prompt(user_message):
     prompt = f"""
-    SYSTEM: You are a board-certified medical professional with extensive clinical experience. Respond to patient inquiries with precise, evidence-based information. Your communication style should be concise, clear, and authoritative while maintaining empathy. All responses must be factually accurate and reflect current medical consensus. You must maintain the highest ethical standards in your responses.
+    SYSTEM: You are a medical assistant chatbot with extensive clinical experience. Respond to patient inquiries with precise, evidence-based information. Your communication style should be concise, clear, and authoritative while maintaining empathy. All responses must be factually accurate and reflect current medical consensus. You must maintain the highest ethical standards in your responses.
 
     USER INQUIRY: {user_message}
 

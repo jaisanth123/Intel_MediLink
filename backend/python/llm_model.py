@@ -82,17 +82,17 @@ def get_llm_response(message: str, chat_history: ChatHistory):
         is_nutrition_prompt = "You are a nutrition expert" in message
         
         # Create the appropriate system prompt based on the message type
-        if is_nutrition_prompt:
-            system_prompt = """You are a nutrition expert AI assistant. Analyze the provided information carefully and give detailed, helpful nutritional advice. Include:
-1. A summary of the detected nutritional content
-2. Health implications based on the user's age and gender
-3. Specific recommendations for improvement
-4. Any potential concerns that should be addressed"""
-        else:
-            system_prompt = "You are a helpful, friendly AI assistant. Provide clear, concise, and accurate responses to user questions."
+#         if is_nutrition_prompt:
+#             system_prompt = """You are a nutrition expert AI assistant. Analyze the provided information carefully and give detailed, helpful nutritional advice. Include:
+# 1. A summary of the detected nutritional content
+# 2. Health implications based on the user's age and gender
+# 3. Specific recommendations for improvement
+# 4. Any potential concerns that should be addressed"""
+#         else:
+#             system_prompt = "You are a helpful, friendly AI assistant. Provide clear, concise, and accurate responses to user questions."
         
         # Construct the prompt in Qwen's expected chat format
-        full_prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n{history_text}<|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n"
+        full_prompt = f"<|im_end|>\n{history_text}<|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n"
         
         # Log the prompt for debugging
         logger.info(f"Prompt sent to LLM: {full_prompt}")
