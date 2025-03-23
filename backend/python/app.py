@@ -6,6 +6,7 @@ from PIL import Image
 import os
 import shutil
 import logging
+from pydantic import BaseModel
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -22,8 +23,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Define request model for chat
+class ChatRequest(BaseModel):
+    message: str
+
 # Ensure uploads directory exists
 os.makedirs("uploads", exist_ok=True)
+
+@app.post("/llm-chat")
+async def llm_chat(request: ChatRequest):
+    try:
+        logger.info(f"Received message: {request.message}")
+        # For now, just return a simple acknowledgment
+        return JSONResponse(content={"message": "I received the message"})
+    except Exception as e:
+        logger.error(f"Error in llm-chat: {str(e)}")
+        return JSONResponse(
+            status_code=500, 
+            content={"message": f"Error processing message: {str(e)}"}
+        )
 
 @app.post("/ocr")
 async def ocr(file: UploadFile = File(...)):
