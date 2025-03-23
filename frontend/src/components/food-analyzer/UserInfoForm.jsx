@@ -75,7 +75,7 @@ const UserInfoForm = ({
           </div>
         </div>
       </div>
-
+      {/* 
       <div className="flex justify-end">
         <button
           onClick={onSubmit}
@@ -88,7 +88,7 @@ const UserInfoForm = ({
         >
           Confirm
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

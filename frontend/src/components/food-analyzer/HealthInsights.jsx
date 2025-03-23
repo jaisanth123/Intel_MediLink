@@ -37,13 +37,6 @@ const ChatInterface = () => {
     }
   }, [messages]);
 
-  // Make sure form stays open when image is selected
-  useEffect(() => {
-    if (selectedImage && previewUrl) {
-      setShowUploadForm(true);
-    }
-  }, [selectedImage, previewUrl]);
-
   const handleSendMessage = async () => {
     if (!inputMessage.trim() && !selectedImage) return;
 
@@ -224,12 +217,6 @@ const ChatInterface = () => {
   };
 
   const handleImageUpload = (file, preview) => {
-    if (!file || !preview) {
-      console.error("Invalid file or preview URL");
-      return;
-    }
-
-    // Set state in a single batch to prevent race conditions
     setSelectedImage(file);
     setPreviewUrl(preview);
     setShowUploadForm(true); // Show the form to collect user info
@@ -246,7 +233,7 @@ const ChatInterface = () => {
     }
 
     // Close the form and focus on the chat input
-    // Instead of hiding the form, we'll keep it visible but focus on input
+    setShowUploadForm(false);
     document.getElementById("chatInput").focus();
   };
 
@@ -257,14 +244,14 @@ const ChatInterface = () => {
     >
       {/* Chat Header */}
       <div className="bg-teal-600 text-white p-3">
-        <h1 className="text-xl font-semibold">Food Analysis Assistant</h1>
+        <h1 className="text-xl font-semibold">Health Insights Assistant</h1>
         <p className="text-sm opacity-80">
-          Get personalized insights about your food
+          Get personalized insights about your health
         </p>
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 transition-all transform duration-500 overflow-y-auto p-4 bg-gray-50">
+      <div className="flex-1 overflow-y-auto  p-4 bg-gray-50">
         <MessageList messages={messages} />
 
         {/* Show prominent uploader when no user interaction yet */}
@@ -275,11 +262,8 @@ const ChatInterface = () => {
           >
             <Image size={48} className="text-teal-500 mb-4" />
             <h3 className="text-xl font-medium text-teal-700 mb-2 text-center">
-              Upload a Food Image
+              Upload an image of your Medical report
             </h3>
-            <p className="text-center text-teal-600 mb-4">
-              Upload an image of your meal to get text analysis
-            </p>
             <ImageUploader onImageSelected={handleImageUpload} />
           </div>
         )}

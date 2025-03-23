@@ -8,6 +8,7 @@ import FoodAnalyzer from "./components/FoodAnalyzer";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./components/profile/ProfilePage";
+import HealthInsights from "./components/food-analyzer/HealthInsights.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,7 +22,7 @@ function App() {
   const checkAuthStatus = () => {
     const token = localStorage.getItem("token");
     const tokenExpiration = localStorage.getItem("tokenExpiration");
-    
+
     if (token && tokenExpiration) {
       // Check if token is expired
       if (new Date().getTime() > parseInt(tokenExpiration)) {
@@ -48,16 +49,18 @@ function App() {
 
   return (
     <Routes>
-      <Route 
-        path="/login" 
+      <Route
+        path="/login"
         element={
-          isAuthenticated ? 
-            <Navigate to="/dashboard" replace /> : 
+          isAuthenticated ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
             <LoginPage onLogin={handleLogin} />
-        } 
+          )
+        }
       />
       <Route path="/signup" element={<SignupPage />} />
-      <Route 
+      <Route
         element={
           <Layout onLogout={handleLogout} isAuthenticated={isAuthenticated} />
         }
@@ -70,19 +73,27 @@ function App() {
             </ProtectedRoute>
           }
         />
-      <Route
-      path="/profile"
-      element={
-        <ProtectedRoute isAuthenticated={isAuthenticated}>
-          <ProfilePage />
-        </ProtectedRoute>
-      }
-    />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/food-analyzer"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <FoodAnalyzer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/health-insights"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <HealthInsights />
             </ProtectedRoute>
           }
         />

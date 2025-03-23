@@ -1,10 +1,11 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Form
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import pytesseract
 from PIL import Image
 import os
 import shutil
+from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 import logging
 from pydantic import BaseModel
 
