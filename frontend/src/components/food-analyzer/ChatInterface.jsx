@@ -83,6 +83,8 @@ const ChatInterface = () => {
       ]);
     } finally {
       setIsTyping(false);
+      // Close the upload form after sending message
+      setShowUploadForm(false);
       scrollToBottom();
     }
   };
@@ -94,15 +96,19 @@ const ChatInterface = () => {
         message: message,
       });
 
-      if (response.data) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            type: "system",
-            content: response.data.message || "No response received",
-          },
-        ]);
-      }
+      // Handle the direct text response instead of JSON
+      const responseContent = response.data;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "system",
+          content:
+            typeof responseContent === "string"
+              ? responseContent
+              : responseContent.message || "No response received",
+        },
+      ]);
     } catch (error) {
       console.error("Error sending chat message:", error);
       throw error;
@@ -152,8 +158,19 @@ const ChatInterface = () => {
       // Remove the processing message
       setMessages((prev) => prev.filter((msg) => !msg.isProcessing));
 
-      if (response.data.success) {
-        // Format and display the OCR result
+      // Handle the direct text response from the server
+      if (typeof response.data === "string") {
+        // If response is directly a string
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "system",
+            content: response.data,
+            isAnalysisResult: true,
+          },
+        ]);
+      } else if (response.data.success) {
+        // For backward compatibility with JSON responses
         setMessages((prev) => [
           ...prev,
           {
@@ -196,20 +213,27 @@ const ChatInterface = () => {
       return "Could not analyze the image.";
     }
 
+    const age = result.debug_info?.age || "Not provided";
+    const gender = result.debug_info?.gender || "Not provided";
+    const text = result.debug_info?.ocr_text || "No text detected in image.";
+    const description = result.debug_info?.description || "";
+
     return `
     Analysis complete!
     
     User Profile:
-    • Age: ${result.age}
-    • Gender: ${result.gender}
+    • Age: ${age}
+    • Gender: ${gender}
     
-    ${result.description ? `Description: ${result.description}\n\n` : ""}
+    ${description ? `Description: ${description}\n\n` : ""}
     
     Text detected in image:
-    ${result.text ? result.text.trim() : "No text detected in image."}
+    ${text.trim() ? text.trim() : "No text detected in image."}
+    
+    Analysis:
+    ${result.response || "No analysis available."}
     `;
   };
-
   const resetImageUpload = () => {
     setSelectedImage(null);
     setPreviewUrl(null);
@@ -232,7 +256,7 @@ const ChatInterface = () => {
     // Set state in a single batch to prevent race conditions
     setSelectedImage(file);
     setPreviewUrl(preview);
-    setShowUploadForm(true); // Show the form to collect user info
+    setShowUploadForm(false); // Close the form when an image is selected
   };
 
   const handleUserInfoChange = (info) => {
@@ -246,7 +270,7 @@ const ChatInterface = () => {
     }
 
     // Close the form and focus on the chat input
-    // Instead of hiding the form, we'll keep it visible but focus on input
+    setShowUploadForm(false); // Ensure the form is closed after submission
     document.getElementById("chatInput").focus();
   };
 

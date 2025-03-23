@@ -3,10 +3,11 @@ import { CheckCircle, AlertCircle, XCircle } from "lucide-react";
 const MessageList = ({ messages }) => {
   const renderAnalysisResult = (content) => {
     // This is a placeholder - you would format this based on your actual response structure
+    return content;
     return (
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <div className="text-lg font-medium mb-2">Analysis Results</div>
-        <div className="text-gray-700">{content}</div>
+        {/* <div className="text-lg font-medium mb-2">Analysis Results</div> */}
+        {content}
       </div>
     );
   };

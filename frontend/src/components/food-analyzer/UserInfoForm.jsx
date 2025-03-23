@@ -14,8 +14,13 @@ const UserInfoForm = ({
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    onSubmit(); // Call the onSubmit function passed from the parent
+  };
+
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
+    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium text-teal-800">
           Health Information
@@ -89,7 +94,7 @@ const UserInfoForm = ({
           Confirm
         </button>
       </div> */}
-    </div>
+    </form>
   );
 };
 
