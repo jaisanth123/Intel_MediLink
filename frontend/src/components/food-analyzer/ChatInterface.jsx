@@ -265,7 +265,7 @@ const ChatInterface = () => {
 
   const handleUserInfoSubmit = () => {
     if (!userInfo.age || !userInfo.gender) {
-      alert("Please provide both age and gender");
+      alert("Please provide  both age and gender");
       return;
     }
 
