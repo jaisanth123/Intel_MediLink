@@ -23,8 +23,9 @@ const ChatInterface = () => {
   const messageEndRef = useRef(null);
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Update backend URL to point directly to Python FastAPI
-  const BACKEND_URL = "http://localhost:8000";
+  // Update backend URL to point to ngrok URL
+  // const BACKEND_URL = "http://localhost:8000";
+  const BACKEND_URL = "http://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
