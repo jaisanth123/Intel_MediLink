@@ -26,9 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-ngrok.set_auth_token("2niCah6WtVIDTrt4rndLw83ak5y_7YrR4DjQk3p1hqSqmyCKp")
-listener = ngrok.forward("127.0.0.1:8000", authtoken_from_env=True, domain="cricket-romantic-slightly.ngrok-free.app")
-translator = Translator()
+# ngrok.set_auth_token("2niCah6WtVIDTrt4rndLw83ak5y_7YrR4DjQk3p1hqSqmyCKp")
+# listener = ngrok.forward("127.0.0.1:8000", authtoken_from_env=True, domain="cricket-romantic-slightly.ngrok-free.app")
+
 
 # Define request model for chat
 class ChatRequest(BaseModel):
