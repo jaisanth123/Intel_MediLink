@@ -9,21 +9,26 @@ import shutil
 import logging
 from pydantic import BaseModel
 from llm_model import get_llm_response, ChatHistory  # Import the LLM response function and ChatHistory class
-
+import ngrok
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5000", "*"],  # Added wildcard for testing
+    allow_origins=["*"],  # Added wildcard for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+ngrok.set_auth_token("2niCah6WtVIDTrt4rndLw83ak5y_7YrR4DjQk3p1hqSqmyCKp")
+listener = ngrok.forward("127.0.0.1:8000", authtoken_from_env=True, domain="cricket-romantic-slightly.ngrok-free.app")
+translator = Translator()
 
 # Define request model for chat
 class ChatRequest(BaseModel):
@@ -57,12 +62,6 @@ async def llm_chat(request: ChatRequest):
             status_code=500, 
             content={"message": error_message}
         )
-
-
-
-
-
-
 
 @app.post("/ocr")
 async def ocr(
