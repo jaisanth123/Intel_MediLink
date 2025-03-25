@@ -25,7 +25,7 @@ const ChatInterface = () => {
 
   // Update backend URL to point to ngrok URL
   // const BACKEND_URL = "http://localhost:8000";
-  const BACKEND_URL = "http://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
+  const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -221,16 +221,16 @@ const ChatInterface = () => {
 
     return `
     Analysis complete!
-    
+
     User Profile:
     • Age: ${age}
     • Gender: ${gender}
-    
+
     ${description ? `Description: ${description}\n\n` : ""}
-    
+
     Text detected in image:
     ${text.trim() ? text.trim() : "No text detected in image."}
-    
+
     Analysis:
     ${result.response || "No analysis available."}
     `;
