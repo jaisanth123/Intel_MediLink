@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Load Qwen-1.5-0.5B-Chat model and tokenizer
-MODEL_NAME = "Qwen/Qwen-1.5-0.5B-Chat"
-
+# MODEL_NAME = "Qwen/Qwen-1.5-0.5B-Chat"
+MODEL_NAME = "ContactDoctor/Bio-Medical-MultiModal-Llama-3-8B-V1"
 try:
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
@@ -49,20 +49,20 @@ class ChatHistory:
     def __init__(self, window_size=5):  # Changed to 5 as requested
         self.messages: List[Tuple[str, str]] = []
         self.window_size = window_size
-    
+
     def add_message(self, user_message: str, ai_response: str = ""):
         """Add a message pair to history. If ai_response is empty, it will be filled later."""
         self.messages.append((user_message, ai_response))
         # Keep only the last window_size messages
         if len(self.messages) > self.window_size:
             self.messages = self.messages[-self.window_size:]
-    
+
     def update_last_response(self, ai_response: str):
         """Update the last AI response in the history."""
         if self.messages:
             user_msg, _ = self.messages[-1]
             self.messages[-1] = (user_msg, ai_response)
-    
+
     def get_chat_history_text(self):
         """Format the chat history in a way that works well with Qwen models."""
         history_text = ""
@@ -77,33 +77,33 @@ def get_llm_response(message: str, chat_history: ChatHistory):
     try:
         # Add the current message to history
         chat_history.add_message(message)
-        
+
         # Get conversation history (excluding the current message)
         history_text = chat_history.get_chat_history_text()
-        
+
         # Create a system prompt
         system_prompt = "You are a helpful, friendly AI assistant. Provide clear, concise, and accurate responses to user questions."
-        
+
         # Construct the prompt in Qwen's expected chat format
         full_prompt = f"<|im_start|>system\n{system_prompt}<|im_end|>\n{history_text}<|im_start|>user\n{message}<|im_end|>\n<|im_start|>assistant\n"
-        
+
         # Log the prompt for debugging
         logger.info(f"Prompt sent to LLM: {full_prompt}")
-        
+
         # Generate the response using the pipeline
         response = pipe(full_prompt)[0]['generated_text']
-        
+
         # Clean up the response if needed
         response = response.strip()
-        
+
         # Log the response for debugging
         logger.info(f"Generated response: {response}")
-        
+
         # Update the chat history with the AI's response
         chat_history.update_last_response(response)
-        
+
         return response
-        
+
     except Exception as e:
         logger.error(f"Error in get_llm_response: {str(e)}")
         error_message = f"I'm sorry, I encountered an error: {str(e)}"
@@ -114,13 +114,13 @@ def get_llm_response(message: str, chat_history: ChatHistory):
 if __name__ == "__main__":
     # Initialize chat history with 5-message window
     history = ChatHistory(window_size=5)
-    
+
     # Example conversation loop
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["exit", "quit", "bye"]:
             print("Chatbot: Goodbye!")
             break
-        
+
         response = get_llm_response(user_input, history)
         print(f"Chatbot: {response}")
