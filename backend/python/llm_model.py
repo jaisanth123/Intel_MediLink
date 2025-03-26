@@ -23,9 +23,9 @@ if not HF_TOKEN:
     logger.warning("No Hugging Face token found in Kaggle secrets. Some models may require authentication.")
 
 # Load Qwen-1.5-0.5B-Chat model and tokenizer
-MODEL_NAME = "Qwen/Qwen-1.5-0.5B-Chat"
+# MODEL_NAME = "Qwen/Qwen-1.5-0.5B-Chat"
 # MODEL_NAME = "ContactDoctor/Bio-Medical-MultiModal-Llama-3-8B-V1"
-# MODEL_NAME = "ContactDoctor/Bio-Medical-Llama-3-8B"
+MODEL_NAME = "ContactDoctor/Bio-Medical-Llama-3-8B"
 try:
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME,token=HF_TOKEN, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
