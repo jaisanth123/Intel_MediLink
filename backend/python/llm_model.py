@@ -22,7 +22,7 @@ HF_TOKEN = user_secrets.get_secret("hf_token")
 if not HF_TOKEN:
     logger.warning("No Hugging Face token found in Kaggle secrets. Some models may require authentication.")
 
-# Load Qwen-1.5-0.5B-Chat amodel and tokenizer
+# Load Qwen-1.5-0.5B-Chat amasfodel and tokenizer
 # MODEL_NAME = "Qwen/Qwen-1.5-0.5B-Chat"
 # MODEL_NAME = "ContactDoctor/Bio-Medical-MultiModal-Llama-3-8B-V1"
 MODEL_NAME = "ContactDoctor/Bio-Medical-Llama-3-8B"
