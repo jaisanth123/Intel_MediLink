@@ -38,7 +38,7 @@ const ChatInterface = () => {
     }
   }, [messages]);
 
-  // Make sure form stays open when image is selected
+  // Make sure form stays open when hello image is selected
   useEffect(() => {
     if (selectedImage && previewUrl) {
       setShowUploadForm(true);
