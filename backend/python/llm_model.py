@@ -3,7 +3,7 @@ import torch
 from transformers import pipeline
 import logging
 from typing import List, Tuple
-
+import os
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -11,12 +11,18 @@ logger = logging.getLogger(__name__)
 # Check for GPU availability
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+HF_TOKEN = os.environ.get('hf_token', None)
+
+# Validate token
+if not HF_TOKEN:
+    logger.warning("No Hugging Face token found in Kaggle secrets. Some models may require authentication.")
+
 # Load Qwen-1.5-0.5B-Chat model and tokenizer
 MODEL_NAME = "Qwen/Qwen-1.5-0.5B-Chat"
 # MODEL_NAME = "ContactDoctor/Bio-Medical-MultiModal-Llama-3-8B-V1"
 # MODEL_NAME = "ContactDoctor/Bio-Medical-Llama-3-8B"
 try:
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME,token=HF_TOKEN, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
         torch_dtype=torch.float16 if device == "cuda" else torch.float32,
