@@ -5,13 +5,18 @@ import logging
 from typing import List, Tuple
 import os
 # Set up logging
+from kaggle_secrets import UserSecretsClient
+
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Check for GPU availability
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-HF_TOKEN = os.environ.get('hf_token', None)
+# HF_TOKEN = os.environ.get('hf_token', None)
+user_secrets = UserSecretsClient()
+HF_TOKEN = user_secrets.get_secret("hf_token")
 
 # Validate token
 if not HF_TOKEN:
