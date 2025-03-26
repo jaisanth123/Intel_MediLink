@@ -20,17 +20,17 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow your frontend URL
+    allow_origins=["*","http://localhost/5173"],  # Allow your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Set ngrok authentication and forward
 ngrok.set_auth_token("2niCah6WtVIDTrt4rndLw83ak5y_7YrR4DjQk3p1hqSqmyCKp")
 listener = ngrok.forward("127.0.0.1:8000", domain="cricket-romantic-slightly.ngrok-free.app")
 
-# Define request model for chat@
+
+# Define request model for chat
 class ChatRequest(BaseModel):
     message: str
 
@@ -62,11 +62,6 @@ async def llm_chat(request: ChatRequest):
             status_code=500,
             content={"message": error_message}
         )
-
-@app.get("/")
-async def read_root():
-    return {"message": "I Love you"}
-
 
 @app.post("/ocr")
 async def ocr(
