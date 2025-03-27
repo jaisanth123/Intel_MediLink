@@ -139,25 +139,12 @@ const ChatInterface = () => {
     try {
       setIsUploading(true);
 
-      // Add a processing message
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          content: "Analyzing your food image...",
-          isProcessing: true,
-        },
-      ]);
-
       // Directly use the FastAPI OCR endpoint
       const response = await axios.post(`${BACKEND_URL}/ocr`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      // Remove the processing message
-      setMessages((prev) => prev.filter((msg) => !msg.isProcessing));
 
       // Handle the direct text response from the server
       if (typeof response.data === "string") {
