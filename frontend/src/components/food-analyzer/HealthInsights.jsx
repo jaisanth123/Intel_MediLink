@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Image, CheckCircle } from "lucide-react";
+import { Send, Image, CheckCircle, Trash2 } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import UserInfoForm from "./UserInfoForm";
 import MessageList from "./MessageList";
@@ -287,7 +287,7 @@ const HealthInsignts = () => {
             className="flex flex-col items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50"
             style={{ margin: "auto" }}
           >
-            <Image size={48} className="text-teal-500 mb-4" />
+            <Image size={48} className="text-teal-500 mb-4 animate-bounce" />
             <h3 className="text-xl font-medium text-teal-700 mb-2 text-center">
               Upload Your health report
             </h3>
@@ -309,27 +309,6 @@ const HealthInsignts = () => {
           </div>
         )}
         <div ref={messageEndRef} />
-
-        {selectedImage && !showUploadForm && (
-          <div className="mt-2 flex items-center space-x-2 p-2 border border-teal-300 rounded-lg bg-teal-50">
-            <Image
-              src={previewUrl}
-              alt="Selected for analysis"
-              className="h-16 w-16 object-cover rounded-md border border-teal-400"
-            />
-            <div className="flex flex-col">
-              <p className="text-teal-700 font-semibold">Image Selected</p>
-              <p className="text-sm text-teal-600">
-                {userInfo.age && userInfo.gender
-                  ? "Ready to send for analysis!"
-                  : "Please provide your age and gender before sending."}
-              </p>
-            </div>
-            <div className="animate-pulse">
-              <CheckCircle className="h-6 w-6 text-teal-500" />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Image Upload Form */}
@@ -364,9 +343,9 @@ const HealthInsignts = () => {
                 <div className="flex space-x-2">
                   <button
                     onClick={resetImageUpload}
-                    className="text-sm text-red-600 hover:underline"
+                    className="flex items-center text-sm text-red-600 hover:underline"
                   >
-                    Remove
+                    <Trash2 className="mr-1" />
                   </button>
                 </div>
               </div>

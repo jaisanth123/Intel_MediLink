@@ -167,7 +167,7 @@ const ImageUploader = ({ onImageSelected }) => {
       <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="flex items-center justify-center p-3 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white hover:shadow-lg transition-all duration-300 cursor-pointer"
+        className="flex items-center justify-center p-3 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-white hover:shadow-lg transition-all duration-300 cursor-pointer"
         onClick={openModal}
         title="Upload food image"
       >

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Image } from "lucide-react";
+import { Send, Image, CheckCircle, Trash2 } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import UserInfoForm from "./UserInfoForm";
 import MessageList from "./MessageList";
@@ -285,12 +285,12 @@ const ChatInterface = () => {
             className="flex flex-col items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50"
             style={{ margin: "auto" }}
           >
-            <Image size={48} className="text-teal-500 mb-4" />
+            <Image size={48} className="text-teal-500 mb-4 animate-bounce" />
             <h3 className="text-xl font-medium text-teal-700 mb-2 text-center">
-              Upload a Food Image
+              Upload Your Food image
             </h3>
             <p className="text-center text-teal-600 mb-4">
-              Upload an image of your meal to get text analysis
+              Upload an image of Food to get text analysis
             </p>
             <ImageUploader onImageSelected={handleImageUpload} />
           </div>
@@ -325,7 +325,30 @@ const ChatInterface = () => {
       {/* Input Area */}
       <div className="p-4 border-t border-gray-200 bg-white">
         <div className="flex items-center space-x-2">
-          <ImageUploader onImageSelected={handleImageUpload} />
+          {!selectedImage ? (
+            <>
+              <ImageUploader onImageSelected={handleImageUpload} />
+            </>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <img
+                src={previewUrl}
+                alt="Selected for analysis"
+                className="h-16 w-16 object-cover rounded-md border border-teal-300"
+              />
+              <div className="flex flex-col">
+                <p className="text-teal-700 font-semibold">Image Selected</p>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={resetImageUpload}
+                    className="text-sm text-red-600 hover:underline"
+                  >
+                    <Trash2 className="mr-1" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="flex-1 relative">
             <textarea
@@ -353,19 +376,10 @@ const ChatInterface = () => {
           </button>
         </div>
 
-        {selectedImage && !showUploadForm && (
-          <div className="mt-2 flex items-center space-x-2">
-            <img
-              src={previewUrl}
-              alt="Selected for analysis"
-              className="h-16 w-16 object-cover rounded-md border border-teal-300"
-            />
-            <div className="text-sm text-teal-600">
-              <p>Image selected for analysis.</p>
-              {!userInfo.age || !userInfo.gender
-                ? "Please provide your age and gender before sending."
-                : "Ready to send for analysis!"}
-            </div>
+        {/* Additional feedback for image selection */}
+        {selectedImage && (
+          <div className="mt-2 text-sm text-teal-600">
+            Ready to send for analysis!
           </div>
         )}
       </div>
