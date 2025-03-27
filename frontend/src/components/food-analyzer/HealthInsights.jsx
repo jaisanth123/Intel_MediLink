@@ -311,7 +311,7 @@ const HealthInsignts = () => {
         <div ref={messageEndRef} />
       </div>
 
-      {/* Image Upload Form */}
+      {/* Image Upload  Form */}
       {showUploadForm && (
         <div className="p-4 border-t border-gray-200 bg-gray-50">
           <UserInfoForm
