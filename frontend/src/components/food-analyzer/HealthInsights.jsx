@@ -5,12 +5,12 @@ import UserInfoForm from "./UserInfoForm";
 import MessageList from "./MessageList";
 import axios from "axios";
 
-const ChatInterface = () => {
+const HealthInsignts = () => {
   const [messages, setMessages] = useState([
     {
       type: "system",
       content:
-        "Hello! I'm your Food Analysis Assistant. How can I help you today?",
+        "Hello! I'm your Report Analysis Assistant. How can I help you today?",
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -23,8 +23,9 @@ const ChatInterface = () => {
   const messageEndRef = useRef(null);
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Update backend URL to point directly to Python FastAPI
-  const BACKEND_URL = "http://localhost:8000";
+  // Update backend URL to point to ngrok URL
+  // const BACKEND_URL = "http://localhost:8000";
+  const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
 
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,6 +37,13 @@ const ChatInterface = () => {
       setHasInteracted(true);
     }
   }, [messages]);
+
+  // Make sure form stays open when hello image is selected
+  useEffect(() => {
+    if (selectedImage && previewUrl) {
+      setShowUploadForm(true);
+    }
+  }, [selectedImage, previewUrl]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() && !selectedImage) return;
@@ -76,6 +84,8 @@ const ChatInterface = () => {
       ]);
     } finally {
       setIsTyping(false);
+      // Close the upload form after sending message
+      setShowUploadForm(false);
       scrollToBottom();
     }
   };
@@ -83,19 +93,23 @@ const ChatInterface = () => {
   const handleChatMessage = async (message) => {
     try {
       // Directly use the FastAPI llm-chat endpoint
-      const response = await axios.post(`${BACKEND_URL}/llm-chat`, {
+      const response = await axios.post(`${BACKEND_URL}/health-llm-chat`, {
         message: message,
       });
 
-      if (response.data) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            type: "system",
-            content: response.data.message || "No response received",
-          },
-        ]);
-      }
+      // Handle the direct text response instead of JSON
+      const responseContent = response.data;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "system",
+          content:
+            typeof responseContent === "string"
+              ? responseContent
+              : responseContent.message || "No response received",
+        },
+      ]);
     } catch (error) {
       console.error("Error sending chat message:", error);
       throw error;
@@ -125,28 +139,26 @@ const ChatInterface = () => {
     try {
       setIsUploading(true);
 
-      // Add a processing message
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          content: "Analyzing your food image...",
-          isProcessing: true,
-        },
-      ]);
-
       // Directly use the FastAPI OCR endpoint
-      const response = await axios.post(`${BACKEND_URL}/ocr`, formData, {
+      const response = await axios.post(`${BACKEND_URL}/health-ocr`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      // Remove the processing message
-      setMessages((prev) => prev.filter((msg) => !msg.isProcessing));
-
-      if (response.data.success) {
-        // Format and display the OCR result
+      // Handle the direct text response from the server
+      if (typeof response.data === "string") {
+        // If response is directly a string
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "system",
+            content: response.data,
+            isAnalysisResult: true,
+          },
+        ]);
+      } else if (response.data.success) {
+        // For backward compatibility with JSON responses
         setMessages((prev) => [
           ...prev,
           {
@@ -189,20 +201,27 @@ const ChatInterface = () => {
       return "Could not analyze the image.";
     }
 
+    const age = result.debug_info?.age || "Not provided";
+    const gender = result.debug_info?.gender || "Not provided";
+    const text = result.debug_info?.ocr_text || "No text detected in image.";
+    const description = result.debug_info?.description || "";
+
     return `
     Analysis complete!
-    
+
     User Profile:
-    • Age: ${result.age}
-    • Gender: ${result.gender}
-    
-    ${result.description ? `Description: ${result.description}\n\n` : ""}
-    
+    • Age: ${age}
+    • Gender: ${gender}
+
+    ${description ? `Description: ${description}\n\n` : ""}
+
     Text detected in image:
-    ${result.text ? result.text.trim() : "No text detected in image."}
+    ${text.trim() ? text.trim() : "No text detected in image."}
+
+    Analysis:
+    ${result.response || "No analysis available."}
     `;
   };
-
   const resetImageUpload = () => {
     setSelectedImage(null);
     setPreviewUrl(null);
@@ -217,9 +236,15 @@ const ChatInterface = () => {
   };
 
   const handleImageUpload = (file, preview) => {
+    if (!file || !preview) {
+      console.error("Invalid file or preview URL");
+      return;
+    }
+
+    // Set state in a single batch to prevent race conditions
     setSelectedImage(file);
     setPreviewUrl(preview);
-    setShowUploadForm(true); // Show the form to collect user info
+    setShowUploadForm(false); // Close the form when an image is selected
   };
 
   const handleUserInfoChange = (info) => {
@@ -228,12 +253,12 @@ const ChatInterface = () => {
 
   const handleUserInfoSubmit = () => {
     if (!userInfo.age || !userInfo.gender) {
-      alert("Please provide both age and gender");
+      alert("Please provide  both age and gender");
       return;
     }
 
     // Close the form and focus on the chat input
-    setShowUploadForm(false);
+    setShowUploadForm(false); // Ensure the form is closed after submission
     document.getElementById("chatInput").focus();
   };
 
@@ -244,14 +269,16 @@ const ChatInterface = () => {
     >
       {/* Chat Header */}
       <div className="bg-teal-600 text-white p-3">
-        <h1 className="text-xl font-semibold">Health Insights Assistant</h1>
+        <h1 className="text-xl font-semibold">
+          Health Report Analysis Assistant
+        </h1>
         <p className="text-sm opacity-80">
-          Get personalized insights about your health
+          Get personalized insights about your food
         </p>
       </div>
 
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto  p-4 bg-gray-50">
+      <div className="flex-1 transition-all transform duration-500 overflow-y-auto p-4 bg-gray-50">
         <MessageList messages={messages} />
 
         {/* Show prominent uploader when no user interaction yet */}
@@ -262,8 +289,11 @@ const ChatInterface = () => {
           >
             <Image size={48} className="text-teal-500 mb-4" />
             <h3 className="text-xl font-medium text-teal-700 mb-2 text-center">
-              Upload an image of your Medical report
+              Upload Your health report
             </h3>
+            <p className="text-center text-teal-600 mb-4">
+              Upload an image of health report to get text analysis
+            </p>
             <ImageUploader onImageSelected={handleImageUpload} />
           </div>
         )}
@@ -338,4 +368,4 @@ const ChatInterface = () => {
   );
 };
 
-export default ChatInterface;
+export default HealthInsignts;
