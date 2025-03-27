@@ -354,11 +354,18 @@ const ChatInterface = () => {
         </div>
 
         {selectedImage && !showUploadForm && (
-          <div className="mt-2 text-sm text-teal-600">
-            Image ready to send.{" "}
-            {!userInfo.age || !userInfo.gender
-              ? "Please provide your age and gender when sending."
-              : "Click send to analyze."}
+          <div className="mt-2 flex items-center space-x-2">
+            <img
+              src={previewUrl}
+              alt="Selected for analysis"
+              className="h-16 w-16 object-cover rounded-md border border-teal-300"
+            />
+            <div className="text-sm text-teal-600">
+              <p>Image selected for analysis.</p>
+              {!userInfo.age || !userInfo.gender
+                ? "Please provide your age and gender before sending."
+                : "Ready to send for analysis!"}
+            </div>
           </div>
         )}
       </div>

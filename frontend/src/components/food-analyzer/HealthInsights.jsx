@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Image } from "lucide-react";
+import { Send, Image, CheckCircle } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import UserInfoForm from "./UserInfoForm";
 import MessageList from "./MessageList";
@@ -309,6 +309,27 @@ const HealthInsignts = () => {
           </div>
         )}
         <div ref={messageEndRef} />
+
+        {selectedImage && !showUploadForm && (
+          <div className="mt-2 flex items-center space-x-2 p-2 border border-teal-300 rounded-lg bg-teal-50">
+            <Image
+              src={previewUrl}
+              alt="Selected for analysis"
+              className="h-16 w-16 object-cover rounded-md border border-teal-400"
+            />
+            <div className="flex flex-col">
+              <p className="text-teal-700 font-semibold">Image Selected</p>
+              <p className="text-sm text-teal-600">
+                {userInfo.age && userInfo.gender
+                  ? "Ready to send for analysis!"
+                  : "Please provide your age and gender before sending."}
+              </p>
+            </div>
+            <div className="animate-pulse">
+              <CheckCircle className="h-6 w-6 text-teal-500" />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Image Upload Form */}
@@ -327,7 +348,30 @@ const HealthInsignts = () => {
       {/* Input Area */}
       <div className="p-4 border-t border-gray-200 bg-white">
         <div className="flex items-center space-x-2">
-          <ImageUploader onImageSelected={handleImageUpload} />
+          {!selectedImage ? (
+            <>
+              <ImageUploader onImageSelected={handleImageUpload} />
+            </>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <img
+                src={previewUrl}
+                alt="Selected for analysis"
+                className="h-16 w-16 object-cover rounded-md border border-teal-300"
+              />
+              <div className="flex flex-col">
+                <p className="text-teal-700 font-semibold">Image Selected</p>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={resetImageUpload}
+                    className="text-sm text-red-600 hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="flex-1 relative">
             <textarea
@@ -355,12 +399,10 @@ const HealthInsignts = () => {
           </button>
         </div>
 
-        {selectedImage && !showUploadForm && (
+        {/* Additional feedback for image selection */}
+        {selectedImage && (
           <div className="mt-2 text-sm text-teal-600">
-            Image ready to send.{" "}
-            {!userInfo.age || !userInfo.gender
-              ? "Please provide your age and gender when sending."
-              : "Click send to analyze."}
+            Ready to send for analysis!
           </div>
         )}
       </div>
