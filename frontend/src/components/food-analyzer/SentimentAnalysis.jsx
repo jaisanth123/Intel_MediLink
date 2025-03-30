@@ -1,268 +1,281 @@
-import { useState, useRef, useEffect } from "react";
-import { Send, Image, CheckCircle, Trash2 } from "lucide-react";
-import ImageUploader from "./ImageUploader";
-import UserInfoForm from "./UserInfoForm";
-import MessageList from "./MessageList";
+import { useState, useRef } from "react";
 import axios from "axios";
 
 const SentimentAnalysis = () => {
-  const [messages, setMessages] = useState([
-    {
-      type: "system",
-      content:
-        "Hello! I'm your Report Analysis Assistant. How can I help you today?",
-    },
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [userInfo, setUserInfo] = useState({ age: "", gender: "" });
-  const [isTyping, setIsTyping] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [showUploadForm, setShowUploadForm] = useState(false);
-  const messageEndRef = useRef(null);
-  const [hasInteracted, setHasInteracted] = useState(false);
-
   // Update backend URL to point to ngrok URL
-  // const BACKEND_URL = "http://localhost:8000";
-  const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
+  const BACKEND_URL = "http://localhost:8000";
+  // const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
 
-  const scrollToBottom = () => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    // Set hasInteracted to true if there are more than the initial system message
-    if (messages.length > 1) {
-      setHasInteracted(true);
-    }
-  }, [messages]);
-
-  // Make sure form stays open when hello image is selected
-  useEffect(() => {
-    if (selectedImage && previewUrl) {
-      setShowUploadForm(true);
-    }
-  }, [selectedImage, previewUrl]);
-
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() && !selectedImage) return;
-
-    // User has now interacted with the chat
-    setHasInteracted(true);
-
-    // Add user message to chat
-    const newUserMessage = {
-      type: "user",
-      content: inputMessage,
-      image: previewUrl,
-    };
-
-    setMessages((prev) => [...prev, newUserMessage]);
-    setInputMessage("");
-    setIsTyping(true);
-    scrollToBottom();
-
-    try {
-      if (selectedImage) {
-        // If image is selected, call OCR endpoint
-        await handleImageOCR();
-      } else {
-        // Regular chat message
-        await handleChatMessage(inputMessage);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      // Check if file is WAV or MP4 (matching backend validation)
+      const fileExt = selectedFile.name.split(".").pop().toLowerCase();
+      if (fileExt !== "wav" && fileExt !== "mp4") {
+        setError("Only WAV and MP4 files are supported");
+        setFile(null);
+        setFileName("");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
       }
-    } catch (error) {
-      console.error("Error processing message:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          content:
-            "Sorry, there was an error processing your request. Please try again.",
-          isError: true,
-        },
-      ]);
-    } finally {
-      setIsTyping(false);
-      // Close the upload form after sending message
-      setShowUploadForm(false);
-      scrollToBottom();
+
+      console.log("File selected:", selectedFile);
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+      setError("");
     }
   };
 
-  const handleChatMessage = async (message) => {
-    try {
-      // Directly use the FastAPI llm-chat endpoint
-      const response = await axios.post(`${BACKEND_URL}/health-llm-chat`, {
-        message: message,
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      // Handle the direct text response instead of JSON
-      const responseContent = response.data;
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          content:
-            typeof responseContent === "string"
-              ? responseContent
-              : responseContent.message || "No response received",
-        },
-      ]);
-    } catch (error) {
-      console.error("Error sending chat message:", error);
-      throw error;
-    }
-  };
-
-  const handleImageOCR = async () => {
-    // Only proceed if we have image and required user info
-    if (!selectedImage || !userInfo.age || !userInfo.gender) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "system",
-          content: "Please provide your age and gender to analyze this food.",
-          isWarning: true,
-        },
-      ]);
+    if (!file) {
+      setError("Please select an audio file");
       return;
     }
 
+    setIsLoading(true);
+    setResult(null);
+    setError("");
+    setUploadProgress(0);
+
+    // Create form data to send file - FastAPI expects multipart/form-data with "file" field
     const formData = new FormData();
-    formData.append("file", selectedImage); // Change 'image' to 'file' to match FastAPI parameter
-    formData.append("age", userInfo.age);
-    formData.append("gender", userInfo.gender);
-    formData.append("description", inputMessage); // Use description parameter from FastAPI
+    formData.append("file", file); // FastAPI expects "file" as the field name
+
+    console.log("Sending file:", file.name, file.type, file.size);
 
     try {
-      setIsUploading(true);
-
-      // Directly use the FastAPI OCR endpoint
-      const response = await axios.post(`${BACKEND_URL}/health-ocr`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Handle the direct text response from the server
-      if (typeof response.data === "string") {
-        // If response is directly a string
-        setMessages((prev) => [
-          ...prev,
-          {
-            type: "system",
-            content: response.data,
-            isAnalysisResult: true,
-          },
-        ]);
-      } else if (response.data.success) {
-        // For backward compatibility with JSON responses
-        setMessages((prev) => [
-          ...prev,
-          {
-            type: "system",
-            content: formatAnalysisResult(response.data),
-            isAnalysisResult: true,
-          },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            type: "system",
-            content: `Could not analyze the image: ${
-              response.data.message || "Unknown error"
-            }`,
-            isError: true,
-          },
-        ]);
-      }
-    } catch (error) {
-      console.error("Error during image OCR:", error);
-      setMessages((prev) => [
-        ...prev,
+      const response = await axios.post(
+        `${BACKEND_URL}/process-audio`,
+        formData,
         {
-          type: "system",
-          content: `Error analyzing image: ${error.message}`,
-          isError: true,
-        },
-      ]);
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Accept: "application/json",
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            console.log("Upload progress:", percentCompleted);
+            setUploadProgress(percentCompleted);
+          },
+          timeout: 120000, // 120 seconds - audio processing might take time
+        }
+      );
+
+      console.log("Response received:", response.data);
+      setResult(response.data);
+    } catch (err) {
+      console.error("Error processing audio:", err);
+      let errorMsg = "Failed to process audio.";
+
+      if (err.response) {
+        errorMsg = `Server error (${err.response.status}): ${
+          err.response.data.detail || "Unknown error"
+        }`;
+        console.error("Response data:", err.response.data);
+      } else if (err.request) {
+        errorMsg =
+          "No response from server. Check if your backend is running and accessible.";
+        console.error("No response received:", err.request);
+      } else {
+        errorMsg = `Request error: ${err.message}`;
+        console.error("Request error:", err.message);
+      }
+
+      setError(errorMsg);
     } finally {
-      setIsUploading(false);
-      resetImageUpload();
+      setIsLoading(false);
+      setUploadProgress(0);
     }
   };
 
-  const formatAnalysisResult = (result) => {
-    // Format the OCR results including user info and detected text
-    if (!result || !result.success) {
-      return "Could not analyze the image.";
-    }
-
-    const age = result.debug_info?.age || "Not provided";
-    const gender = result.debug_info?.gender || "Not provided";
-    const text = result.debug_info?.ocr_text || "No text detected in image.";
-    const description = result.debug_info?.description || "";
-
-    return `
-    Analysis complete!
-
-    User Profile:
-    • Age: ${age}
-    • Gender: ${gender}
-
-    ${description ? `Description: ${description}\n\n` : ""}
-
-    Text detected in image:
-    ${text.trim() ? text.trim() : "No text detected in image."}
-
-    Analysis:
-    ${result.response || "No analysis available."}
-    `;
-  };
-  const resetImageUpload = () => {
-    setSelectedImage(null);
-    setPreviewUrl(null);
-    setShowUploadForm(false);
+  // Function to get color based on sentiment
+  const getSentimentColor = (sentiment) => {
+    if (sentiment === "Positive") return "text-green-600";
+    if (sentiment === "Negative") return "text-red-600";
+    return "text-yellow-600"; // Neutral
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  // Function to create progress bars for sentiment scores
+  const renderScoreBar = (score, color) => {
+    const percentage = score * 100;
+    return (
+      <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div
+          className={`h-2.5 rounded-full ${color}`}
+          style={{ width: `${percentage}%` }}
+        ></div>
+      </div>
+    );
   };
 
-  const handleImageUpload = (file, preview) => {
-    if (!file || !preview) {
-      console.error("Invalid file or preview URL");
-      return;
-    }
+  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold text-center mb-6">
+        Audio Sentiment Analysis
+      </h1>
 
-    // Set state in a single batch to prevent race conditions
-    setSelectedImage(file);
-    setPreviewUrl(preview);
-    setShowUploadForm(false); // Close the form when an image is selected
-  };
+      <form onSubmit={handleSubmit} className="mb-6">
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">
+            Upload Audio File (WAV or MP4 only)
+          </label>
+          <div className="flex items-center">
+            <input
+              type="file"
+              accept=".wav,.mp4,audio/wav,audio/mp4,video/mp4"
+              onChange={handleFileChange}
+              className="hidden"
+              id="audio-upload"
+              ref={fileInputRef}
+            />
+            <label
+              htmlFor="audio-upload"
+              className="cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded border border-blue-300 transition"
+            >
+              Choose File
+            </label>
+            <span className="ml-3 text-gray-600">
+              {fileName || "No file selected"}
+            </span>
+          </div>
+          {file && (
+            <p className="mt-1 text-sm text-gray-500">
+              File type: {file.type}, Size:{" "}
+              {(file.size / 1024 / 1024).toFixed(2)} MB
+            </p>
+          )}
+        </div>
 
-  const handleUserInfoChange = (info) => {
-    setUserInfo(info);
-  };
+        <button
+          type="submit"
+          disabled={isLoading || !file}
+          className={`w-full py-2 px-4 rounded font-medium ${
+            isLoading || !file
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 text-white"
+          } transition`}
+        >
+          {isLoading ? "Processing Audio..." : "Analyze Sentiment"}
+        </button>
 
-  const handleUserInfoSubmit = () => {
-    if (!userInfo.age || !userInfo.gender) {
-      alert("Please provide  both age and gender");
-      return;
-    }
+        {error && <p className="mt-2 text-red-600">{error}</p>}
+      </form>
 
-    // Close the form and focus on the chat input
-    setShowUploadForm(false); // Ensure the form is closed after submission
-    document.getElementById("chatInput").focus();
-  };
+      {isLoading && (
+        <div className="text-center my-8">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+          <p className="mt-2 text-gray-600">Processing your audio...</p>
+          {uploadProgress > 0 && uploadProgress < 100 && (
+            <div className="mt-2">
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                <div
+                  className="h-2.5 rounded-full bg-blue-500"
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-gray-500">Upload: {uploadProgress}%</p>
+            </div>
+          )}
+          {uploadProgress === 100 && (
+            <p className="mt-2 text-sm text-gray-500">
+              Upload complete. Now processing with AI models...
+            </p>
+          )}
+        </div>
+      )}
 
-  return <div></div>;
+      {result && (
+        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4">Analysis Results</h2>
+
+          <div className="mb-4">
+            <h3 className="font-medium text-gray-700">Sentiment:</h3>
+            <p
+              className={`mt-1 text-lg font-semibold ${getSentimentColor(
+                result.sentiment
+              )}`}
+            >
+              {result.sentiment}
+            </p>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="font-medium text-gray-700 mb-2">
+              Sentiment Scores:
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="flex justify-between mb-1">
+                  <span>Positive</span>
+                  <span className="text-green-600">
+                    {(result.sentiment_scores.positive * 100).toFixed(1)}%
+                  </span>
+                </p>
+                {renderScoreBar(
+                  result.sentiment_scores.positive,
+                  "bg-green-500"
+                )}
+              </div>
+              <div>
+                <p className="flex justify-between mb-1">
+                  <span>Negative</span>
+                  <span className="text-red-600">
+                    {(result.sentiment_scores.negative * 100).toFixed(1)}%
+                  </span>
+                </p>
+                {renderScoreBar(result.sentiment_scores.negative, "bg-red-500")}
+              </div>
+              <div>
+                <p className="flex justify-between mb-1">
+                  <span>Neutral</span>
+                  <span className="text-yellow-600">
+                    {(result.sentiment_scores.neutral * 100).toFixed(1)}%
+                  </span>
+                </p>
+                {renderScoreBar(
+                  result.sentiment_scores.neutral,
+                  "bg-yellow-500"
+                )}
+              </div>
+              <div>
+                <p className="flex justify-between mb-1">
+                  <span>Compound</span>
+                  <span className="text-blue-600">
+                    {(result.sentiment_scores.compound * 100).toFixed(1)}%
+                  </span>
+                </p>
+                {renderScoreBar(
+                  Math.abs(result.sentiment_scores.compound),
+                  "bg-blue-500"
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-gray-700">Explanation:</h3>
+            <p className="mt-1 text-gray-800 bg-white p-3 rounded border border-gray-200">
+              {result.explanation}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SentimentAnalysis;
