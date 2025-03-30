@@ -9,6 +9,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./components/profile/ProfilePage";
 import HealthInsights from "./components/food-analyzer/HealthInsights.jsx";
+import SentimentAnalysis from "./components/food-analyzer/SentimentAnalysis.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -94,6 +95,15 @@ function App() {
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <HealthInsights />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/sentiment-analysis"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <SentimentAnalysis />
             </ProtectedRoute>
           }
         />

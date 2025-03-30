@@ -14,7 +14,7 @@ import {
   Heart,
   User,
 } from "lucide-react";
-
+import { DiGoogleAnalytics } from "react-icons/di";
 import { SiWorldhealthorganization } from "react-icons/si";
 import { IoFastFoodOutline } from "react-icons/io5";
 
@@ -59,6 +59,12 @@ const Layout = ({ onLogout }) => {
       title: "Health Insights",
       icon: <SiWorldhealthorganization size={20} />,
       path: "/health-insights",
+    },
+
+    {
+      title: "Sentiment Analysis",
+      icon: <DiGoogleAnalytics size={20} />,
+      path: "/sentiment-analysis",
     },
     { title: "Profile", icon: <User size={20} />, path: "/profile" },
     // { title: "Settings", icon: <Settings size={20} />, path: "/settings" },

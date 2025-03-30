@@ -1,0 +1,13 @@
+openai-whisper
+vaderSentiment
+transformers
+torch
+pyttsx
+ngrok
+uvicorn
+fastapi
+ngrok
+python-multipart
+torchvision
+transformers
+huggingface_hub
