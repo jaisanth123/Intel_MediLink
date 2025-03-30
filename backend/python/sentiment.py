@@ -182,7 +182,6 @@ def explain_feelings(transcription, sentiment_data):
             f"they might be reacting to recent events. Their emotions could stem from personal experiences or external factors."
         )
     return explanation
-
 @app.post("/process-audio", response_class=JSONResponse)
 async def process_audio(file: UploadFile = File(...)):
     """
