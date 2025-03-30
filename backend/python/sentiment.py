@@ -89,7 +89,6 @@
 
 
 
-
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 import whisper
@@ -98,7 +97,6 @@ from transformers import pipeline
 import os
 import tempfile
 import shutil
-import wave
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Audio Sentiment Analysis API")
@@ -114,18 +112,6 @@ app.add_middleware(
 
 # Step 1: Transcribe audio with Whisper
 def transcribe_audio(audio_file_path):
-    # Verify the file is a valid WAV file if it has .wav extension
-    if audio_file_path.lower().endswith('.wav'):
-        try:
-            with wave.open(audio_file_path, 'rb') as wave_file:
-                # Get basic WAV file properties for logging/debugging
-                channels = wave_file.getnchannels()
-                sample_width = wave_file.getsampwidth()
-                frame_rate = wave_file.getframerate()
-                print(f"WAV file details: channels={channels}, sample_width={sample_width}bits, frame_rate={frame_rate}Hz")
-        except wave.Error:
-            raise ValueError("Invalid or corrupted WAV file")
-
     model = whisper.load_model("tiny")
     if not os.path.exists(audio_file_path):
         raise FileNotFoundError(f"Audio file '{audio_file_path}' not found.")
@@ -163,7 +149,6 @@ def explain_feelings(transcription, sentiment_data):
     # Generate explanation
     output = generator(
         prompt,
-        # max_length=350,  # Enough for 5-10 lines
         max_new_tokens=100,
         num_return_sequences=1,
         temperature=0.8,
@@ -182,22 +167,30 @@ def explain_feelings(transcription, sentiment_data):
             f"they might be reacting to recent events. Their emotions could stem from personal experiences or external factors."
         )
     return explanation
+
 @app.post("/process-audio", response_class=JSONResponse)
 async def process_audio(file: UploadFile = File(...)):
     """
-    Process an uploaded WAV or MP4 audio file:
+    Process an uploaded audio file (supports WAV, MP3, MP4, M4A, etc.):
     1. Transcribe the audio
     2. Analyze sentiment
     3. Generate an explanation
 
     Returns a JSON with transcription, sentiment, and explanation.
     """
-    # Check file extension (optional validation)
-    if not (file.filename.lower().endswith('.wav') or file.filename.lower().endswith('.mp4')):
-        raise HTTPException(status_code=400, detail="Only WAV and MP4 files are supported")
+    # List of supported audio formats
+    supported_formats = ['.wav', '.mp3', '.mp4', '.m4a', '.m4p', '.aac', '.ogg', '.flac']
 
-    # Save the uploaded file temporarily
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_file:
+    # Check file extension
+    file_ext = os.path.splitext(file.filename.lower())[1]
+    if file_ext not in supported_formats:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file format. Supported formats: {', '.join(supported_formats)}"
+        )
+
+    # Save the uploaded file temporarily with its original extension
+    with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as temp_file:
         shutil.copyfileobj(file.file, temp_file)
         temp_file_path = temp_file.name
 
@@ -225,43 +218,6 @@ async def process_audio(file: UploadFile = File(...)):
         # Clean up the temporary file
         if os.path.exists(temp_file_path):
             os.unlink(temp_file_path)
-
-# For processing a specific file directly (alternative endpoint)
-@app.get("/process-specific-audio")
-async def process_specific_audio():
-    """
-    Process a specific WAV audio file located at "/home/brooklin/Downloads/input.wav"
-
-    Returns a JSON with transcription, sentiment, and explanation.
-    """
-    # Updated the path to use .wav extension
-    audio_file_path = r"/home/brooklin/Downloads/input.m4a"
-
-
-    try:
-        # Check if file exists
-        if not os.path.exists(audio_file_path):
-            raise HTTPException(status_code=404, detail=f"Audio file not found at {audio_file_path}")
-
-        # Process the audio
-        transcription = transcribe_audio(audio_file_path)
-        sentiment_data = analyze_sentiment(transcription)
-        explanation = explain_feelings(transcription, sentiment_data)
-
-        # Return results
-        return {
-            "transcription": transcription,
-            "sentiment": sentiment_data["sentiment"],
-            "sentiment_scores": {
-                "positive": sentiment_data["scores"]["pos"],
-                "negative": sentiment_data["scores"]["neg"],
-                "neutral": sentiment_data["scores"]["neu"],
-                "compound": sentiment_data["scores"]["compound"]
-            },
-            "explanation": explanation
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

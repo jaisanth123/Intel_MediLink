@@ -14,13 +14,29 @@ const SentimentAnalysis = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
 
+  // Supported audio formats matching the backend
+  const supportedFormats = [
+    ".wav",
+    ".mp3",
+    ".mp4",
+    ".m4a",
+    ".m4p",
+    ".aac",
+    ".ogg",
+    ".flac",
+  ];
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      // Check if file is WAV or MP4 (matching backend validation)
-      const fileExt = selectedFile.name.split(".").pop().toLowerCase();
-      if (fileExt !== "wav" && fileExt !== "mp4") {
-        setError("Only WAV and MP4 files are supported");
+      // Check if file has a supported extension
+      const fileExt = "." + selectedFile.name.split(".").pop().toLowerCase();
+      if (!supportedFormats.includes(fileExt)) {
+        setError(
+          `Unsupported file format. Supported formats: ${supportedFormats.join(
+            ", "
+          )}`
+        );
         setFile(null);
         setFileName("");
         if (fileInputRef.current) {
@@ -122,6 +138,11 @@ const SentimentAnalysis = () => {
     );
   };
 
+  // Generate the accept attribute for file input
+  const acceptAttribute = supportedFormats
+    .map((ext) => `${ext},audio/${ext.substring(1)},video/${ext.substring(1)}`)
+    .join(",");
+
   return (
     <div className="max-w-2xl mt-10 mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold text-center mb-6">
@@ -131,12 +152,12 @@ const SentimentAnalysis = () => {
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">
-            Upload Audio File (WAV or MP4 only)
+            Upload Audio File ({supportedFormats.join(", ")})
           </label>
           <div className="flex items-center">
             <input
               type="file"
-              accept=".wav,.mp4,audio/wav,audio/mp4,video/mp4"
+              accept={acceptAttribute}
               onChange={handleFileChange}
               className="hidden"
               id="audio-upload"
@@ -203,6 +224,13 @@ const SentimentAnalysis = () => {
           <h2 className="text-xl font-semibold mb-4">Analysis Results</h2>
 
           <div className="mb-4">
+            <h3 className="font-medium text-gray-700">Transcription:</h3>
+            <p className="mt-1 p-3 bg-white rounded border border-gray-200">
+              {result.transcription}
+            </p>
+          </div>
+
+          <div className="mb-4">
             <h3 className="font-medium text-gray-700">Sentiment:</h3>
             <p
               className={`mt-1 text-lg font-semibold ${getSentimentColor(
@@ -251,18 +279,6 @@ const SentimentAnalysis = () => {
                   "bg-yellow-500"
                 )}
               </div>
-              {/* <div>
-                <p className="flex justify-between mb-1">
-                  <span>Compound</span>
-                  <span className="text-blue-600">
-                    {(result.sentiment_scores.compound * 100).toFixed(1)}%
-                  </span>
-                </p>
-                {renderScoreBar(
-                  Math.abs(result.sentiment_scores.compound),
-                  "bg-blue-500"
-                )}
-              </div> */}
             </div>
           </div>
 
