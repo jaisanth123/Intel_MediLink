@@ -3,8 +3,8 @@ import axios from "axios";
 
 const SentimentAnalysis = () => {
   // Update backend URL to point to ngrok URL
-  const BACKEND_URL = "http://localhost:8000";
-  // const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
+  // const BACKEND_URL = "http://localhost:8000";
+  const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
 
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
@@ -14,7 +14,7 @@ const SentimentAnalysis = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
 
-  // Supported audio formats matching the backend
+  // Supported audio formats matching the ffbackend
   const supportedFormats = [
     ".wav",
     ".mp3",
@@ -222,13 +222,6 @@ const SentimentAnalysis = () => {
       {result && (
         <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
           <h2 className="text-xl font-semibold mb-4">Analysis Results</h2>
-
-          <div className="mb-4">
-            <h3 className="font-medium text-gray-700">Transcription:</h3>
-            <p className="mt-1 p-3 bg-white rounded border border-gray-200">
-              {result.transcription}
-            </p>
-          </div>
 
           <div className="mb-4">
             <h3 className="font-medium text-gray-700">Sentiment:</h3>
