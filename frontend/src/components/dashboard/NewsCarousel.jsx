@@ -428,7 +428,7 @@ const NewsCarousel = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={goToPrevNews}
-              className="absolute top-1/3 left-2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-colors z-10"
+              className="absolute top-1/3 left-2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-colors "
               aria-label="Previous news"
             >
               <ChevronLeft size={20} />
@@ -437,7 +437,7 @@ const NewsCarousel = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={goToNextNews}
-              className="absolute top-1/3 right-2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-colors z-10"
+              className="absolute top-1/3 right-2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-colors "
               aria-label="Next news"
             >
               <ChevronRight size={20} />

@@ -70,9 +70,9 @@ const FeatureCard = ({ title, description, icon, color, link, linkText }) => {
       className="card p-6 hover:shadow-lg transition-shadow relative overflow-hidden"
     >
       <div
-        className={`absolute top-0 right-0 w-32 h-32 rounded-full ${colorClasses.circle} -mr-16 -mt-16 z-0`}
+        className={`absolute top-0 right-0 w-32 h-32 rounded-full ${colorClasses.circle} -mr-16 -mt-16 `}
       ></div>
-      <div className="relative z-10">
+      <div className="relative ">
         <div className="flex items-center mb-4">
           <motion.div
             whileHover={{ rotate: [0, -10, 10, -10, 0] }}
