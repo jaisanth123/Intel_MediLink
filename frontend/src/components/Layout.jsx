@@ -188,7 +188,7 @@ const Layout = ({ onLogout }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header */}
-        <header className="bg-white border-b px-4 py-3 flex items-center justify-between">
+        <header className="bg-white border-b px-4 py-3 flex items-center justify-between fixed w-full z-10">
           <div className="flex items-center">
             {isMobile && (
               <button
@@ -219,7 +219,7 @@ const Layout = ({ onLogout }) => {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto px-2">
+        <main className="flex-1 overflow-auto px-2 pt-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
