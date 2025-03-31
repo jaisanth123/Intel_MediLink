@@ -54,7 +54,6 @@ const HealthTips = () => {
           </Link>
         </motion.div>
       </div>
-
       {/* Tips List */}
       <div className="space-y-4">
         {healthTips.map((tip) => (
