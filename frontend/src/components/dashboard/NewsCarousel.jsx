@@ -423,7 +423,7 @@ const NewsCarousel = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Navigation buttons */}
+            {/* Navigation bduttons */}
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
