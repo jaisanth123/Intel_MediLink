@@ -282,7 +282,7 @@ const ChatInterface = () => {
         {/* Show prominent uploader when no user interaction yet */}
         {!hasInteracted && !selectedImage && (
           <div
-            className="flex flex-col items-center justify-center w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50"
+            className="flex flex-col items-center justify-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mt-4 py-12 px-4 border-2 border-dashed border-teal-300 rounded-lg bg-teal-50"
             style={{ margin: "auto" }}
           >
             <Image size={48} className="text-teal-500 mb-4 animate-bounce" />

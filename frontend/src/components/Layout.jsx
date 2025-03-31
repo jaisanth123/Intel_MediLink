@@ -131,6 +131,7 @@ const Layout = ({ onLogout }) => {
                 <Link
                   key={index}
                   to={item.path}
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center px-4 py-3 ${
                     location.pathname === item.path
                       ? "bg-teal-50 text-teal-600"
@@ -232,7 +233,7 @@ const Layout = ({ onLogout }) => {
       {/* Mobile sidebar overlay */}
       {isMobile && isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-10"
+          className="fixed inset-0 bg-opacity-50 z-10"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}
