@@ -43,6 +43,17 @@ const Dashboard = () => {
       link: "/insights",
       linkText: "View Insights",
     },
+
+    {
+      id: 3,
+      title: "Sentiment Analysis",
+      description:
+        "Analyze your sentiments and emotions based on your food choices. Get insights into how your diet affects your mood and well-being.",
+      icon: "TrendingUp",
+      color: "orange",
+      link: "/sentiment-analysis",
+      linkText: "Analyze Sentiment Now",
+    },
   ];
 
   return (
