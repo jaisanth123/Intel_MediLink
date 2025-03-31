@@ -19,7 +19,7 @@ const FeatureCard = ({ title, description, icon, color, link, linkText }) => {
     }
   };
 
-  // Map color string to tailwind classes
+  // Map color string to tailwifdnd classes
   const getColorClasses = (colorName) => {
     switch (colorName) {
       case "teal":
