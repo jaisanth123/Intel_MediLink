@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Utensils, TrendingUp, Video, Pill } from "lucide-react";
 
 const FeatureCard = ({ title, description, icon, color, link, linkText }) => {
-  // Map icon string to component
+  // Map icon string tosadf component
   const getIcon = (iconName) => {
     switch (iconName) {
       case "Utensils":
