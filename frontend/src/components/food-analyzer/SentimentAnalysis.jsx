@@ -4,7 +4,7 @@ import TextSentiment from "./TextSentiment";
 const SentimentAnalysis = () => {
   // Update backend URL to point to ngrok URL
   // const BACKEND_URL = "http://localhost:8000";
-  const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app";  // Update this to your ngrok URL
+  const BACKEND_URL = "https://cricket-romantic-slightly.ngrok-free.app"; // Update this to your ngrok URL
 
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");

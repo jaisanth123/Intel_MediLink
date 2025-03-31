@@ -1,10 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const TextSentiment = () => {
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingError, setRecordingError] = useState("");
+
+  // Refs for speech recognition
+  const recognitionRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Initialize speech recognition
+  useEffect(() => {
+    // Check if browser supports speech recognition
+    if (
+      !("webkitSpeechRecognition" in window) &&
+      !("SpeechRecognition" in window)
+    ) {
+      setRecordingError("Speech recognition is not supported in your browser.");
+      return;
+    }
+
+    // Initialize speech recognition
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+
+    recognitionRef.current.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .map((result) => result[0].transcript)
+        .join("");
+
+      setInputText(transcript);
+    };
+
+    recognitionRef.current.onerror = (event) => {
+      setRecordingError(`Error occurred in recognition: ${event.error}`);
+      setIsRecording(false);
+    };
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  // Handle start/stop recording
+  const toggleRecording = () => {
+    if (isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+    } else {
+      setRecordingError("");
+      recognitionRef.current.start();
+      setIsRecording(true);
+    }
+  };
+
+  // Handle key press for Enter key
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      analyzeSentiment();
+    }
+  };
 
   const analyzeSentiment = async () => {
     if (!inputText.trim()) {
@@ -87,26 +151,89 @@ const TextSentiment = () => {
   };
 
   return (
-    <div className="max-w-3xl mt-10 mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
           <h1 className="text-3xl font-bold text-white">Sentiment Analyzer</h1>
           <p className="text-blue-100 mt-2">
-            Enter your text below to analyze the emotional tone
+            Enter your text or speak to analyze the emotional tone
           </p>
         </div>
 
         <div className="p-6">
           <div className="mb-6">
-            <textarea
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-              rows="4"
-              placeholder="How are you feeling today? Type your thoughts here..."
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-            ></textarea>
+            <div className="relative">
+              <textarea
+                ref={textareaRef}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                rows="4"
+                placeholder="How are you feeling today? Type your thoughts here or use voice input..."
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyPress={handleKeyPress}
+              ></textarea>
+
+              <button
+                className={`absolute right-3 bottom-3 p-2 rounded-full ${
+                  isRecording
+                    ? "bg-red-500 text-white"
+                    : "bg-gray-200 text-gray-600"
+                } hover:bg-opacity-90 transition-colors focus:outline-none`}
+                onClick={toggleRecording}
+                title={isRecording ? "Stop recording" : "Start voice input"}
+              >
+                {isRecording ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <rect x="6" y="6" width="12" height="12" strokeWidth="2" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {recordingError && (
+              <p className="mt-2 text-sm text-amber-600">{recordingError}</p>
+            )}
 
             {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+
+            <div className="flex items-center mt-2 text-xs text-gray-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Press Enter to analyze or use the button below
+            </div>
 
             <button
               className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50"
@@ -142,6 +269,13 @@ const TextSentiment = () => {
               )}
             </button>
           </div>
+
+          {isRecording && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-lg flex items-center">
+              <div className="w-3 h-3 bg-red-500 rounded-full mr-3 animate-pulse"></div>
+              <p className="text-red-600">Recording... Speak now</p>
+            </div>
+          )}
 
           {result && (
             <div
@@ -207,3 +341,95 @@ const TextSentiment = () => {
 };
 
 export default TextSentiment;
+
+// import React, { useEffect } from "react";
+// import SpeechRecognition, {
+//   useSpeechRecognition,
+// } from "react-speech-recognition";
+
+// const TextSentiment = () => {
+//   const {
+//     transcript,
+//     listening,
+//     resetTranscript,
+//     browserSupportsSpeechRecognition,
+//     isMicrophoneAvailable,
+//   } = useSpeechRecognition();
+
+//   // Add this inside your component:
+//   useEffect(() => {
+//     console.log(
+//       "Speech recognition supported:",
+//       browserSupportsSpeechRecognition
+//     );
+//     console.log("Microphone available:", isMicrophoneAvailable);
+
+//     // Try requesting microphone permission explicitly
+//     navigator.mediaDevices
+//       .getUserMedia({ audio: true })
+//       .then((stream) => {
+//         console.log("Microphone access granted");
+//         stream.getTracks().forEach((track) => track.stop()); // Stop the stream after testing
+//       })
+//       .catch((err) => {
+//         console.error("Error accessing microphone:", err);
+//       });
+//   }, [browserSupportsSpeechRecognition, isMicrophoneAvailable]);
+
+//   if (!browserSupportsSpeechRecognition) {
+//     return (
+//       <div className="p-4 bg-red-100 text-red-700 rounded">
+//         Browser doesn't support speech recognition.
+//       </div>
+//     );
+//   }
+
+//   if (!isMicrophoneAvailable) {
+//     return (
+//       <div className="p-4 bg-yellow-100 text-yellow-700 rounded">
+//         Microphone permission is not granted.
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md">
+//       <h1 className="text-xl font-bold mb-4">Speech Recognition Test</h1>
+//       <p className="mb-2">Microphone: {listening ? "on" : "off"}</p>
+
+//       <div className="flex space-x-2 mb-4">
+//         <button
+//           onClick={() => SpeechRecognition.startListening({ continuous: true })}
+//           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+//         >
+//           Start
+//         </button>
+//         <button
+//           onClick={SpeechRecognition.stopListening}
+//           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+//         >
+//           Stop
+//         </button>
+//         <button
+//           onClick={resetTranscript}
+//           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+//         >
+//           Reset
+//         </button>
+//       </div>
+
+//       <div className="mt-4">
+//         <h2 className="text-lg font-semibold mb-2">Transcript:</h2>
+//         <div className="p-3 bg-gray-100 rounded min-h-16">
+//           {transcript || "Start speaking..."}
+//         </div>
+//       </div>
+
+//       <div className="mt-4 text-sm text-gray-600">
+//         <p>Browser: {navigator.userAgent}</p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TextSentiment;
