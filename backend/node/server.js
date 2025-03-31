@@ -15,7 +15,7 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Replace with your frontend URL
+  origin: "*", // Replace with your frontend URL
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
