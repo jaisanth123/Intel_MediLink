@@ -339,7 +339,6 @@ const HealthInsignts = () => {
                 className="h-16 w-16 object-cover rounded-md border border-teal-300"
               />
               <div className="flex flex-col">
-                <p className="text-teal-700 font-semibold">Image Selected</p>
                 <div className="flex space-x-2">
                   <button
                     onClick={resetImageUpload}
@@ -355,7 +354,7 @@ const HealthInsignts = () => {
           <div className="flex-1 relative">
             <textarea
               id="chatInput"
-              className="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+              className="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none md:resize-y"
               placeholder="Type your message..."
               rows={1}
               value={inputMessage}
@@ -372,18 +371,14 @@ const HealthInsignts = () => {
               (!inputMessage.trim() && !selectedImage) || isUploading
                 ? "bg-gray-200 text-gray-400"
                 : "bg-teal-600 text-white hover:bg-teal-700"
-            } focus:outline-none focus:ring-2 focus:ring-teal-500`}
+            } focus:outline-none focus:ring-2 focus:ring-teal-500 md:p-4`}
           >
             <Send size={18} />
           </button>
         </div>
 
         {/* Additional feedback for image selection */}
-        {selectedImage && (
-          <div className="mt-2 text-sm text-teal-600">
-            Ready to send for analysis!
-          </div>
-        )}
+
       </div>
     </div>
   );
