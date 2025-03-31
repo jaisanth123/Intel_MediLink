@@ -256,6 +256,39 @@ async def process_audio(file: UploadFile = File(...)):
             os.unlink(temp_file_path)
 
 
+@app.post("/text-sentiment", response_class=JSONResponse)
+async def analyze_text_sentiment(request: ChatRequest):
+    """
+    Process text input for sentiment analysis:
+    1. Analyze sentiment
+    2. Generate an explanation
+
+    Returns a JSON with sentiment and explanation.
+    """
+    try:
+        text = request.message
+
+        # Analyze sentiment
+        sentiment_data = analyze_sentiment(text)
+
+        # Generate explanation
+        explanation = explain_feelings(text, sentiment_data)
+
+        # Return results
+        return {
+            "text": text,
+            "sentiment": sentiment_data["sentiment"],
+            "sentiment_scores": {
+                "positive": sentiment_data["scores"]["pos"],
+                "negative": sentiment_data["scores"]["neg"],
+                "neutral": sentiment_data["scores"]["neu"],
+                "compound": sentiment_data["scores"]["compound"]
+            },
+            "explanation": explanation
+        }
+    except Exception as e:
+        logger.error(f"Error in text-sentiment: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 #======================================SENTIMENT ANALYSIS END =================================
