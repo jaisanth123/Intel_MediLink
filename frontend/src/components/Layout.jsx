@@ -87,29 +87,35 @@ const Layout = ({ onLogout }) => {
       {/* Sidebar */}
       <motion.div
         className={`fixed md:relative z-20 bg-white shadow-lg h-full ${
-          isSidebarOpen ? "w-64" : "w-16"
+          isSidebarOpen ? "w-64" : "w-0 md:w-16"
         } transition-all duration-300 overflow-hidden`}
         animate={{
-          width: isSidebarOpen ? "250px" : "64px",
+          width: isSidebarOpen
+            ? isMobile
+              ? "250px"
+              : "250px"
+            : isMobile
+            ? "0px"
+            : "64px",
         }}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="flex items-center"
-            >
-              <span className="h-8 w-8 bg-teal-600 rounded-md flex items-center justify-center">
-                <Heart size={20} className="text-white" />
-              </span>
-              {isSidebarOpen && (
+            {isSidebarOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="flex items-center"
+              >
+                <span className="h-8 w-8 bg-teal-600 rounded-md flex items-center justify-center">
+                  <Heart size={20} className="text-white" />
+                </span>
                 <span className="ml-2 text-xl font-semibold text-gray-800">
                   MediCare
                 </span>
-              )}
-            </motion.div>
+              </motion.div>
+            )}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className={`${
