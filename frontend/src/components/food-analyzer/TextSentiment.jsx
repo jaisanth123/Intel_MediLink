@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-
 const TextSentiment = () => {
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState(null);
@@ -216,7 +215,6 @@ const TextSentiment = () => {
             )}
 
             {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-
             <div className="flex items-center mt-2 text-xs text-gray-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -341,95 +339,3 @@ const TextSentiment = () => {
 };
 
 export default TextSentiment;
-
-// import React, { useEffect } from "react";
-// import SpeechRecognition, {
-//   useSpeechRecognition,
-// } from "react-speech-recognition";
-
-// const TextSentiment = () => {
-//   const {
-//     transcript,
-//     listening,
-//     resetTranscript,
-//     browserSupportsSpeechRecognition,
-//     isMicrophoneAvailable,
-//   } = useSpeechRecognition();
-
-//   // Add this inside your component:
-//   useEffect(() => {
-//     console.log(
-//       "Speech recognition supported:",
-//       browserSupportsSpeechRecognition
-//     );
-//     console.log("Microphone available:", isMicrophoneAvailable);
-
-//     // Try requesting microphone permission explicitly
-//     navigator.mediaDevices
-//       .getUserMedia({ audio: true })
-//       .then((stream) => {
-//         console.log("Microphone access granted");
-//         stream.getTracks().forEach((track) => track.stop()); // Stop the stream after testing
-//       })
-//       .catch((err) => {
-//         console.error("Error accessing microphone:", err);
-//       });
-//   }, [browserSupportsSpeechRecognition, isMicrophoneAvailable]);
-
-//   if (!browserSupportsSpeechRecognition) {
-//     return (
-//       <div className="p-4 bg-red-100 text-red-700 rounded">
-//         Browser doesn't support speech recognition.
-//       </div>
-//     );
-//   }
-
-//   if (!isMicrophoneAvailable) {
-//     return (
-//       <div className="p-4 bg-yellow-100 text-yellow-700 rounded">
-//         Microphone permission is not granted.
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md">
-//       <h1 className="text-xl font-bold mb-4">Speech Recognition Test</h1>
-//       <p className="mb-2">Microphone: {listening ? "on" : "off"}</p>
-
-//       <div className="flex space-x-2 mb-4">
-//         <button
-//           onClick={() => SpeechRecognition.startListening({ continuous: true })}
-//           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-//         >
-//           Start
-//         </button>
-//         <button
-//           onClick={SpeechRecognition.stopListening}
-//           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-//         >
-//           Stop
-//         </button>
-//         <button
-//           onClick={resetTranscript}
-//           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-//         >
-//           Reset
-//         </button>
-//       </div>
-
-//       <div className="mt-4">
-//         <h2 className="text-lg font-semibold mb-2">Transcript:</h2>
-//         <div className="p-3 bg-gray-100 rounded min-h-16">
-//           {transcript || "Start speaking..."}
-//         </div>
-//       </div>
-
-//       <div className="mt-4 text-sm text-gray-600">
-//         <p>Browser: {navigator.userAgent}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TextSentiment;

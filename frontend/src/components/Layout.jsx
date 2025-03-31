@@ -1,4 +1,3 @@
-// File: src/components/Layout.jsx
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -17,12 +16,14 @@ import {
 import { DiGoogleAnalytics } from "react-icons/di";
 import { SiWorldhealthorganization } from "react-icons/si";
 import { IoFastFoodOutline } from "react-icons/io5";
+import GoogleTranslate from "./food-analyzer/GoogleTranslate";
 
 const Layout = ({ onLogout }) => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const [showTranslator, setShowTranslator] = useState(true);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -39,6 +40,18 @@ const Layout = ({ onLogout }) => {
 
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  // Effect to control translator visibility on route change
+  useEffect(() => {
+    // Hide translator and show it only after a short delay
+    // This prevents multiple instances from being created
+    setShowTranslator(false);
+    const timer = setTimeout(() => {
+      setShowTranslator(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     onLogout();
@@ -60,7 +73,6 @@ const Layout = ({ onLogout }) => {
       icon: <SiWorldhealthorganization size={20} />,
       path: "/health-insights",
     },
-
     {
       title: "Sentiment Analysis",
       icon: <DiGoogleAnalytics size={20} />,
@@ -113,7 +125,6 @@ const Layout = ({ onLogout }) => {
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
-
           <div className="flex-1 overflow-y-auto py-4">
             <nav>
               {sidebarItems.map((item, index) => (
@@ -142,8 +153,14 @@ const Layout = ({ onLogout }) => {
                 </Link>
               ))}
             </nav>
-          </div>
 
+            {/* Only show translator when sidebar is open and showTranslator is true */}
+            {isSidebarOpen && showTranslator && (
+              <div className="mt-4 px-4">
+                <GoogleTranslate />
+              </div>
+            )}
+          </div>
           <div className="border-t p-4">
             <button
               onClick={handleLogout}
