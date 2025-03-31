@@ -35,12 +35,12 @@ const LoginPage = ({ onLogin }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://intel-medilink-backend.onrender.com/api/auth/login",
         formData
       );
 
       const { success, token, user } = response.data;
-      
+
       if (success) {
         // Store auth data
         const expirationTime = new Date().getTime() + 60 * 60 * 1000; // 1 hour
@@ -50,7 +50,7 @@ const LoginPage = ({ onLogin }) => {
 
         // Update auth state
         onLogin();
-        
+
         // Navigate to dashboard immediately
         navigate("/dashboard", { replace: true });
       } else {
@@ -59,7 +59,7 @@ const LoginPage = ({ onLogin }) => {
     } catch (error) {
       setError(
         error.response?.data?.message ||
-        "Login failed. Please check your credentials."
+          "Login failed. Please check your credentials."
       );
     } finally {
       setIsLoading(false);

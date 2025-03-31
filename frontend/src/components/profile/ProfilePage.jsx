@@ -18,9 +18,12 @@ const ProfilePage = () => {
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/auth/profile", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get(
+        "https://intel-medilink-backend.onrender.com/api/auth/profile",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setUser(response.data);
       setEditedUser(response.data);
       setIsLoading(false);
@@ -44,7 +47,7 @@ const ProfilePage = () => {
   const handleChange = (e) => {
     setEditedUser({
       ...editedUser,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -52,24 +55,24 @@ const ProfilePage = () => {
     e.preventDefault();
     setError("");
     setUpdateSuccess(false);
-    
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:5000/api/auth/profile",
+        "https://intel-medilink-backend.onrender.com/api/auth/profile",
         editedUser,
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       setUser(response.data);
       setIsEditing(false);
       setUpdateSuccess(true);
-      
+
       // Update local storage with new user data
       localStorage.setItem("user", JSON.stringify(response.data));
-      
+
       setTimeout(() => setUpdateSuccess(false), 3000);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to update profile");
