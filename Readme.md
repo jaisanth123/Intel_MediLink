@@ -61,7 +61,7 @@ Set up the Hugging Face token in your Kaggle secrets:
 >
 > `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`
 >
-> This token has been provided for review purposes. After the review, I will remove it.
+> This token has been provided for review purposes. After the review by the intel team, I will remove it.
 
 3. Run the notebook cells
 
@@ -115,7 +115,7 @@ The project is built with a three-tier architecture:
 3. **Python ML Backend**: FastAPI with Hugging Face models (running on Kaggle)
 
 <p align="center">
-  <img src="/api/placeholder/700/350" alt="Architecture Diagram" />
+  <img src="/home/brooklin/Projects/Intel_Hospital/frontend/src/assets/flow.png" alt="Architecture Diagram" />
 </p>
 
 ## 📋 Documentation
