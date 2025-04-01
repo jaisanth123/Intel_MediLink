@@ -9,12 +9,12 @@ MediCare is a web application designed to provide users with health insights, fo
 ### Technologies Used
 
 - Node.js
+- React.js
+- Tailwind css
 - Express
 - MongoDB
 - Mongoose
 - JWT (JSON Web Tokens)
-- Bcrypt.js
-- dotenv
 
 ### Key Features
 
