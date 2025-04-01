@@ -9,10 +9,6 @@
 
 [Live Demo](https://intel-medi-link.vercel.app) | [Documentation](#documentation) | [Installation](#installation) | [Features](#key-features)
 
-<p align="center">
-  <img src="/api/placeholder/800/400" alt="Intel MediLink Banner" />
-</p>
-
 ## 🚀 Quick Start
 
 ### Option 1: Use the Deployed Version (Recommended)
@@ -63,7 +59,7 @@ Set up the Hugging Face token in your Kaggle secrets:
 >
 > This token has been provided for review purposes. After the review by the intel team, I will remove it.
 
-3. Run the notebook cells
+3. If you want to run the notebook cells
 
 ```python
 # ONLY RUN THIS ON KAGGLE - DO NOT RUN LOCALLY
@@ -120,25 +116,13 @@ The project is built with a three-tier architecture:
 
 ## 📋 Documentation
 
-### API Endpoints
-
-| Endpoint               | Method | Description             | Auth Required |
-| ---------------------- | ------ | ----------------------- | ------------- |
-| `/api/auth/login`      | POST   | User login              | No            |
-| `/api/auth/signup`     | POST   | User registration       | No            |
-| `/api/food/analyze`    | POST   | Analyze food image      | Yes           |
-| `/api/health/insights` | GET    | Get health insights     | Yes           |
-| `/api/news/weekly`     | GET    | Get weekly medical news | Yes           |
-
-### Environment Variables
-
 Only needed if you're setting up your own deployment:
 
 #### Node.js Backend
 
 ```
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+JWT_SECRET=your_jwt_secret for examole "jwt_secret"
 PORT=5000
 ```
 
@@ -158,20 +142,10 @@ Set up the Hugging Face token in your Kaggle secrets:
 ## 🔄 Deployment Status
 
 - **Frontend**: Deployed on [Vercel](https://intel-medi-link.vercel.app)
-- **Node.js Backend**: Deployed on [Render](https://intel-medi-link.vercel.app)
+- **Node.js Backend**: Deployed on [Render]
 - **Python ML Backend**: Running on [Kaggle](https://www.kaggle.com/code/jaisanthk/intel-project-hospital/edit)
 
 > **Note**: The weekly news feature uses a free API that only works on localhost. For deployed versions, this feature is demonstrated in a video walkthrough.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📜 License
 
