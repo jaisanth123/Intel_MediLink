@@ -2,7 +2,7 @@
 
 [![Deployment Status](https://img.shields.io/badge/Frontend-Vercel-success)](https://intel-medi-link.vercel.app)
 [![Deployment Status](https://img.shields.io/badge/Backend-Render-blue)](https://intel-medi-link.vercel.app)
-[![Kaggle Notebook](https://img.shields.io/badge/ML_Backend-Kaggle-orange)](https://www.kaggle.com/code/jaisanthk/intel-project-hospital/edit)
+[![Kaggle Notebook](https://img.shields.io/badge/ML_Backend-Kaggle-orange)](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 > Advanced healthcare insights powered by AI - analyze food, track health metrics, get personalized recommendations
