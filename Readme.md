@@ -115,7 +115,7 @@ The project is built with a three-tier architecture:
 3. **Python ML Backend**: FastAPI with Hugging Face models (running on Kaggle)
 
 <p align="center">
-  <img src="/home/brooklin/Projects/Intel_Hospital/frontend/src/assets/flow.png" alt="Architecture Diagram" />
+  <img src="./frontend/src/assets/flow.png" alt="Architecture Diagram" />
 </p>
 
 ## 📋 Documentation
