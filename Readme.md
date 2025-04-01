@@ -20,7 +20,7 @@ The application is fully deployed and ready to use:
 
 Simply visit the [live demo](https://intel-medi-link.vercel.app) to use the application without any setup!
 
-### Option 2: Run Frontend Locally (with deployed backends)
+### Option 2: Run Frontend Locally (with deployed node backends)
 
 ```bash
 # Clone the repository
@@ -47,7 +47,11 @@ To access or run the Python ML backend:
 1. Visit the [Kaggle notebook](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 2. Set up your Hugging Face token in Kaggle secrets as "hf_token"
 
-#### Python Backend (Kaggle)
+To obtain your Hugging Face token, visit [Hugging Face Token Settings](https://huggingface.co/settings/tokens).
+
+#### Access the Model
+
+To access the model, use the following link: [Bio-Medical-MultiModal-Llama-3-8B-V1](https://huggingface.co/ContactDoctor/Bio-Medical-MultiModal-Llama-3-8B-V1).
 
 Set up the Hugging Face token in your Kaggle secrets:
 
@@ -147,6 +151,19 @@ PORT=5000
 
 #### Python Backend (Kaggle)
 
+> ⚠️ **Important**: The Python backend must be run on Kaggle for optimal performance, not locally.
+
+To access or run the Python ML backend:
+
+1. Visit the [Kaggle notebook](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
+2. Set up your Hugging Face token in Kaggle secrets as "hf_token"
+
+To obtain your Hugging Face token, visit [Hugging Face Token Settings](https://huggingface.co/settings/tokens).
+
+#### Access the Model
+
+To access the model, use the following link: [Bio-Medical-MultiModal-Llama-3-8B-V1](https://huggingface.co/ContactDoctor/Bio-Medical-MultiModal-Llama-3-8B-V1).
+
 Set up the Hugging Face token in your Kaggle secrets:
 
 - Secret name: `hf_token`
@@ -156,7 +173,7 @@ Set up the Hugging Face token in your Kaggle secrets:
 >
 > `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`
 >
-> This token has been provided for review purposes. After the review, I will remove it.
+> This token has been provided for review purposes. After the review by the intel team, I will remove it.
 
 ---
 
@@ -172,6 +189,8 @@ Set up the Hugging Face token in your Kaggle secrets:
 
 ## 📞 Contact
 
+- PhNo: +91 9944403749
+- Email: [@jaisanth2006@gmail.com](mailto:jaisanth2006@gmail.com)
 - GitHub: [@jaisanth123](https://github.com/jaisanth123)
 - Project Link: [https://github.com/jaisanth123/Intel_MediLink](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 
