@@ -95,11 +95,12 @@ print("Successfully logged into Hugging Face!")
 ## 🌟 Key Features
 
 - **User Authentication** - Secure login and signup with JWT
-- **AI-Powered Food Analysis** - Get nutritional insights from food images
-- **Health Dashboard** - Track your health metrics in real-time
-- **Weekly Medical News** - Stay updated with the latest healthcare developments
-- **Sentiment Analysis** - Understand the emotional impact of your dietary choices
-- **Responsive Design** - Seamless experience across all devices
+- **AI-Powered Food Analysis** - Get nutritional insights from food images. Users can upload a photo of the ingredients, provide their age, gender, and a description. This feature utilizes the fine-tuned **Bio-Medical-Llama-3-8B** model from Hugging Face for accurate analysis.
+- **Health Insights Chatbot** - Engage in conversations about medical reports and health-related queries. Users can chat normally with this chatbot to gain insights and advice based on their medical data.
+- **Sentiment Analysis** - Understand the emotional impact of dietary choices. Users can provide audio files, text input, or voice input for analysis, allowing for a comprehensive understanding of their sentiments regarding food and health.
+- **Health Dashboard** - Track your health metrics in real-time.
+- **Weekly Medical News** - Stay updated with the latest healthcare developments.
+- **Responsive Design** - Seamless experience across all devices, including mobile, ensuring accessibility and usability for all users.
 
 ## 🏗️ Architecture
 
