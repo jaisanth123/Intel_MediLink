@@ -59,23 +59,23 @@ from kaggle_secrets import UserSecretsClient
 user_secrets = UserSecretsClient()
 hf_token = user_secrets.get_secret("hf_token")
 print(hf_token)
----
+
 # 2. Login to Hugging Face
 from kaggle_secrets import UserSecretsClient
 from huggingface_hub import login
 
 user_secrets = UserSecretsClient()
 HF_TOKEN = user_secrets.get_secret("hf_token")
----
+
 # Log in to Hugging Face
 login(token=HF_TOKEN)
 print("Successfully logged into Hugging Face!")
 # 3. Clone the repository
 !git clone https://github.com/jaisanth123/Intel_MediLink.git
 # 4. Navigate to Python backend
----
+
 %cd Intel_MediLink/backend/python
----
+
 # 5. Install dependencies
 !pip install uvicorn fastapi ngrok python-multipart torchvision ngrok transformers huggingface_hub pyttsx3 vaderSentiment openai-whisper
 
