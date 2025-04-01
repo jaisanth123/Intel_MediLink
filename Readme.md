@@ -164,7 +164,7 @@ Set up the Hugging Face token in your Kaggle secrets:
 
 - **Frontend**: Deployed on [Vercel](https://intel-medi-link.vercel.app)
 - **Node.js Backend**: Deployed on [Render]
-- **Python ML Backend**: Running on [Kaggle](https://www.kaggle.com/code/jaisanthk/intel-project-hospital/edit)
+- **Python ML Backend**: Running on [Kaggle](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 
 > **Note**: The weekly news feature uses a free API that only works on localhost. For deployed versions, this feature is demonstrated in a video walkthrough.
 
@@ -173,7 +173,7 @@ Set up the Hugging Face token in your Kaggle secrets:
 ## 📞 Contact
 
 - GitHub: [@jaisanth123](https://github.com/jaisanth123)
-- Project Link: [https://github.com/jaisanth123/Intel_MediLink](https://github.com/jaisanth123/Intel_MediLink)
+- Project Link: [https://github.com/jaisanth123/Intel_MediLink](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 
 ---
 
