@@ -130,7 +130,9 @@ The project is built with a three-tier architecture:
 <p align="center">
   <img src="./frontend/src/assets/flow.png" alt="Architecture Diagram" />
 </p>
+
 ---
+
 ## 📋 Documentation
 
 Only needed if you're setting up your own deployment:
