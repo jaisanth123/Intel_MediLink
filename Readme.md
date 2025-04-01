@@ -47,8 +47,22 @@ npm run dev
 
 To access or run the Python ML backend:
 
-1. Visit the [Kaggle notebook](https://www.kaggle.com/code/jaisanthk/intel-project-hospital/edit)
+1. Visit the [Kaggle notebook](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 2. Set up your Hugging Face token in Kaggle secrets as "hf_token"
+
+#### Python Backend (Kaggle)
+
+Set up the Hugging Face token in your Kaggle secrets:
+
+- Secret name: `hf_token`
+- Secret value: Your Hugging Face API token
+
+> **Important**: While logging in, use the following Hugging Face token as a secret:
+>
+> `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`
+>
+> This token has been provided for review purposes. After the review, I will remove it.
+
 3. Run the notebook cells
 
 ```python
