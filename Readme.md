@@ -139,7 +139,7 @@ Only needed if you're setting up your own deployment:
 ```
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-PORT=3000
+PORT=5000
 ```
 
 #### Python Backend (Kaggle)
