@@ -36,11 +36,11 @@ npm install
 npm run dev
 ```
 
+---
+
 ### ML Backend (Python with FastAPI) - Kaggle Only
 
 > ⚠️ **Important**: The Python backend must be run on Kaggle for optimal performance, not locally.
-
----
 
 To access or run the Python ML backend:
 
