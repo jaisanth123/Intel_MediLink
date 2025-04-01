@@ -6,7 +6,7 @@
 
 > Advanced healthcare insights powered by AI - analyze food, track health metrics, get personalized recommendations
 
-[Live Demo](https://intel-medi-link.vercel.app) | [Documentation](#documentation) | [Installation](#installation) | [Features](#key-features)
+[Live Demo](https://intel-medi-link.vercel.app)
 
 ## 🚀 Quick Start
 
@@ -130,7 +130,7 @@ The project is built with a three-tier architecture:
 <p align="center">
   <img src="./frontend/src/assets/flow.png" alt="Architecture Diagram" />
 </p>
-
+---
 ## 📋 Documentation
 
 Only needed if you're setting up your own deployment:
