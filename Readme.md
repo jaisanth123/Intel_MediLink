@@ -40,6 +40,8 @@ npm run dev
 
 > ⚠️ **Important**: The Python backend must be run on Kaggle for optimal performance, not locally.
 
+---
+
 To access or run the Python ML backend:
 
 1. Visit the [Kaggle notebook](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
@@ -57,6 +59,8 @@ Set up the Hugging Face token in your Kaggle secrets:
 > `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`
 >
 > This token has been provided for review purposes. After the review by the intel team, I will remove it.
+
+---
 
 3. If you want to run the notebook cells
 
@@ -91,6 +95,8 @@ print("Successfully logged into Hugging Face!")
 # 6. Start the server
 !uvicorn app:app --port 8000
 ```
+
+---
 
 ## 🌟 Key Features
 
@@ -150,6 +156,8 @@ Set up the Hugging Face token in your Kaggle secrets:
 >
 > This token has been provided for review purposes. After the review, I will remove it.
 
+---
+
 ## 🔄 Deployment Status
 
 - **Frontend**: Deployed on [Vercel](https://intel-medi-link.vercel.app)
@@ -157,6 +165,8 @@ Set up the Hugging Face token in your Kaggle secrets:
 - **Python ML Backend**: Running on [Kaggle](https://www.kaggle.com/code/jaisanthk/intel-project-hospital/edit)
 
 > **Note**: The weekly news feature uses a free API that only works on localhost. For deployed versions, this feature is demonstrated in a video walkthrough.
+
+---
 
 ## 📞 Contact
 
