@@ -135,6 +135,12 @@ Set up the Hugging Face token in your Kaggle secrets:
 - Secret name: `hf_token`
 - Secret value: Your Hugging Face API token
 
+> **Important**: While logging in, use the following Hugging Face token as a secret:
+>
+> `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`
+>
+> This token has been provided for review purposes. After the review, I will remove it.
+
 ## 🔄 Deployment Status
 
 - **Frontend**: Deployed on [Vercel](https://intel-medi-link.vercel.app)
