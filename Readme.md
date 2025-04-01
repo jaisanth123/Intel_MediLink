@@ -190,7 +190,7 @@ Set up the Hugging Face token in your Kaggle secrets:
 ## 📞 Contact
 
 - PhNo: +91 9944403749
-- Email: [@jaisanth2006@gmail.com](mailto:jaisanth2006@gmail.com)
+- Email: [@jaisanth2006@gmail.com](https://mail.google.com/mail/u/0/#inbox?compose=DmwnWstwMzrwzSjpdVCwtvddmXlTsPRZRTVvZTpqdzvrwHWRNhrTmjqHztwmTcpdNvwkNDxMDSrl)
 - GitHub: [@jaisanth123](https://github.com/jaisanth123)
 - Project Link: [https://github.com/jaisanth123/Intel_MediLink](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 
