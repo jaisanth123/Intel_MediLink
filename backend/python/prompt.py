@@ -52,7 +52,7 @@ def create_health_chat_prompt(user_message):
     - Recommend consultation if serious
     """
 
-def create_health_report_analysis_prompt(age, gender, description, ocr_text):
+def create_health_report_analysis_prompt(age, gender, description, ocr_text, user_query):
     """Health report analysis prompt based on OCR results"""
     return f"""
     Patient Profile:
@@ -70,4 +70,9 @@ def create_health_report_analysis_prompt(age, gender, description, ocr_text):
     1. Key findings from the health report.
     2. Risks and benefits for the patient.
     3. Recommendations based on findings.
+
+    Additional Guidelines:
+    - If the OCR data is irrelevant to the user query (e.g., the OCR data is about a urine test and the user asks about an eye check), acknowledge the discrepancy.
+    - Politely inform the user that the provided data does not pertain to their question and suggest they provide relevant information or ask a different question.
+    - Always prioritize the user's query and ensure the response is tailored to their needs.
     """
