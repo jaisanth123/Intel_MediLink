@@ -10,6 +10,7 @@ import {
   Focus,
   Layers,
   Palette,
+  Info,
 } from "lucide-react";
 
 const ImageUploader = ({ onImageSelected }) => {
@@ -197,6 +198,17 @@ const ImageUploader = ({ onImageSelected }) => {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-md w-full mx-4 border-2 border-purple-100"
             >
+              <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
+                <div className="flex items-center">
+                  <Info className="mr-2" />
+                  <span>
+                    {" "}
+                    For better results, consider uploading photos taken with a
+                    document scanner.
+                  </span>
+                </div>
+              </div>
+
               {!showCamera ? (
                 <>
                   <div className="p-6 bg-gradient-to-r from-purple-50 to-indigo-50">
