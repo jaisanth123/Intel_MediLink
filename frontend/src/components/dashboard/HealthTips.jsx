@@ -45,14 +45,10 @@ const HealthTips = () => {
           </motion.div>
           <h3 className="text-lg font-semibold ml-3">Health Tips For You</h3>
         </div>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Link
-            to="/tips"
-            className="text-teal-600 text-sm font-medium hover:text-teal-700 transition-colors flex items-center"
-          >
-            View All <ArrowRight size={16} className="ml-1" />
-          </Link>
-        </motion.div>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        ></motion.div>
       </div>
       {/* Tips List */}
       <div className="space-y-4">
