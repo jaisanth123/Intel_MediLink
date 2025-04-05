@@ -331,8 +331,11 @@ async def ocr(
         except Exception as rm_error:
             logger.warning(f"Error removing file: {str(rm_error)}")
 
+        # Use description as user_query if needed
+        user_query = description  # Use description as the user query
+
         # Prepare the prompt for the LLM with better handling of missing values
-        prompt = create_health_report_analysis_prompt(age_value, gender_value, description, text)
+        prompt = create_health_report_analysis_prompt(age_value, gender_value, description, text, user_query)
 
         # Add the prompt to OCR chat history
         ocr_chat_history.add_message(prompt)
@@ -348,7 +351,6 @@ async def ocr(
             status_code=500,
             content={"success": False, "message": f"Error processing request: {str(e)}"}
         )
-
 @app.get("/health")
 async def health_check():
     """Health check endpoint to verify the service is running."""
