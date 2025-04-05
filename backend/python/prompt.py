@@ -60,6 +60,7 @@ def create_health_report_analysis_prompt(age, gender, description, ocr_text, use
     - Gender: {gender}
     - Condition: {description}
     - OCR Text: {ocr_text}
+    - User Query: {user_query}
 
     Response Guidelines:
     - Be concise and direct.
