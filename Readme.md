@@ -8,6 +8,20 @@
 
 [Live Demo](https://intel-medi-link.vercel.app)
 
+## 📺 Watch Our Tutorial Video
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=Z3O4yR2Lus0" target="_blank">
+    <img src="https://img.youtube.com/vi/Z3O4yR2Lus0/maxresdefault.jpg" alt="Intel MediLink Tutorial Video" width="600" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+  </a>
+</p>
+
+<p align="center">
+  <b>👆 Click the image above to watch our detailed tutorial and demonstration</b>
+</p>
+
+> **See it in action!** Get a complete walkthrough of all features, including the weekly news section and how to use the application effectively.
+
 ## 🚀 Quick Start
 
 ### Option 1: Use the Deployed Version (Recommended)
@@ -180,19 +194,19 @@ Set up the Hugging Face token in your Kaggle secrets:
 ## 🔄 Deployment Status
 
 - **Frontend**: Deployed on [Vercel](https://intel-medi-link.vercel.app)
-- **Node.js Backend**: Deployed on [Render]
+- **Node.js Backend**: Deployed on Render
 - **Python ML Backend**: Running on [Kaggle](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
 
-> **Note**: The weekly news feature uses a free API that only works on localhost. For deployed versions, this feature is demonstrated in a video walkthrough.
+> **Note**: The weekly news feature uses a free API that only works on localhost. For deployed versions, this feature is demonstrated in our [video tutorial](https://www.youtube.com/watch?v=Z3O4yR2Lus0).
 
 ---
 
 ## 📞 Contact
 
-- PhNo: +91 9944403749
-- Email: [@jaisanth2006@gmail.com](https://mail.google.com/mail/u/0/#inbox?compose=DmwnWstwMzrwzSjpdVCwtvddmXlTsPRZRTVvZTpqdzvrwHWRNhrTmjqHztwmTcpdNvwkNDxMDSrl)
-- GitHub: [@jaisanth123](https://github.com/jaisanth123)
-- Project Link: [https://github.com/jaisanth123/Intel_MediLink](https://www.kaggle.com/code/jaisanthk/intel-project-hospital)
+- 📱 Phone: +91 9944403749
+- 📧 Email: [jaisanth2006@gmail.com](mailto:jaisanth2006@gmail.com)
+- 💻 GitHub: [@jaisanth123](https://github.com/jaisanth123)
+- 🔗 Project Link: [Intel_MediLink](https://github.com/jaisanth123/Intel_MediLink)
 
 ---
 
