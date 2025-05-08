@@ -35,11 +35,11 @@ def create_medical_chat_prompt(user_message):
     - Recommend consultation if serious
     # """
 
-# def create_health_chat_prompt(user_message):
+def create_health_chat_prompt(user_message):
     """Health chat prompt"""
     return f"""
     Health Assistance Request:
-    # User Query: {user_message}
+    User Query: {user_message}
 
     Response Guidelines:
     1. Be concise.
