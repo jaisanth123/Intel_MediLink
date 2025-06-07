@@ -72,12 +72,6 @@ Set up the Hugging Face token in your Kaggle secrets:
 - Secret name: `hf_token`
 - Secret value: Your Hugging Face API token
 
-> **Important**: While logging in, use the following Hugging Face token as a secret:
->
-> `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`
->
-> This token has been provided for review purposes. After the review by the intel team, I will remove it.
-
 ---
 
 3. If you want to run the notebook cells
@@ -183,11 +177,6 @@ Set up the Hugging Face token in your Kaggle secrets:
 - Secret name: `hf_token`
 - Secret value: Your Hugging Face API token
 
-> **Important**: While logging in, use the following Hugging Face token as a secret:
->
-> `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`
->
-> This token has been provided for review purposes. After the review by the intel team, I will remove it.
 
 ---
 
